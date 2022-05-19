@@ -1,13 +1,15 @@
-const FEDERALTAXHELPER = require(federalTax.helper);
-const STATETAXHELPER = require(stateTax.helper);
-const FLVTAXHELPER = require(flv.helper);
-const MEDITAXHELPER = require(medi.helper);
-const SDITAXHELPER = require(sdi.helper);
-const SOCIALTAXHELPER = require(social.helper);
-const WCTAXHELPER = require(wc.helper);
-const WFTAXHELPER = require(wf.helper);
-const EXPTAXHELPER = require(exp.helper);
-const SUITAXHELPER = require(sui.helper);
+const FEDERALTAXHELPER = require('federalTax.helper');
+const STATETAXHELPER = require('stateTax.helper');
+const FLVTAXHELPER = require('flv.helper');
+const MEDITAXHELPER = require('medi.helper');
+const SDITAXHELPER = require('sdi.helper');
+const SOCIALTAXHELPER = require('social.helper');
+const WCTAXHELPER = require('wc.helper');
+const WFTAXHELPER = require('wf.helper');
+const EXPTAXHELPER = require('exp.helper');
+const SUITAXHELPER = require('sui.helper');
+const REGEXPATTERN = require('../utils/regexPattern');
+
 module.exports = {
 
     calculate: async () => {

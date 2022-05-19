@@ -1,3 +1,5 @@
+const REGEXPATTERN = require('../utils/regexPattern');
+
 module.exports = {
 
     getFederalTax: async (year, maritalStatus, paymentTotal, paymentMode, exemp = null) => {
@@ -57,7 +59,7 @@ module.exports = {
             var federalTaxSub = annual[maritalStatus][i]['sub'];
             var federalTaxMin = annual[maritalStatus][i]['min'];
             var federalTaxMax = annual[maritalStatus][i]['max'];
-            if(annual[maritalStatus][i]){
+            if(typeof annual[maritalStatus][i]!== 'undefined'){
                 if (i == 0) {
                     if (taxableAmount < federalTaxMin) {
                        var federal_tax_total = 0;
@@ -99,13 +101,13 @@ module.exports = {
         var federal_tax_ytd_total = 0;
         if (federalTax == 0 && exemp != 0) {
             federalTax = Math.round(0 * 100) / 100;
-            if (pre_stub_federal_tax_ytd_total) {
+            if (typeof pre_stub_federal_tax_ytd_total !== 'undefined') {
                 federal_tax_ytd_total = Math.round(pre_stub_federal_tax_ytd_total * 100) / 100;
             } else {
                 federal_tax_ytd_total = federalTax;
             }
         } else if (federalTax != 0) {
-            if (pre_stub_federal_tax_ytd_total) {
+            if (typeof pre_stub_federal_tax_ytd_total !== 'undefined') {
                 if (previ_payDate_year && current_payDate_year && previ_payDate_year != current_payDate_year) {
                     federal_tax_ytd_total = federalTax;
                 } else {
