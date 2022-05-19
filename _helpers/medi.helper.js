@@ -1,3 +1,5 @@
+const REGEXPATTERN = require('../utils/regexPattern');
+
 module.exports = {
 
     getMedicareTax: async (year, paymentTotal, paymentMode) => {
@@ -33,7 +35,7 @@ module.exports = {
 
 			mTaxRate = medi['p2'];
 		}
-        if (pre_stub_fica_medicare_ytd_total) {
+        if (typeof pre_stub_fica_medicare_ytd_total !== 'undefined' ) {
 			if (previ_payDate_year != current_payDate_year) {
 			    fica_medicare_ytd_total = fica_medicare_total;
 			}else{

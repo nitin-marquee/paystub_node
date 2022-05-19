@@ -1,3 +1,4 @@
+const REGEXPATTERN = require('../utils/regexPattern');
 
 module.exports = {
 
@@ -19,7 +20,7 @@ module.exports = {
         var stateTaxdeDuctions = stateTaxRules['deductions'];
 
 
-        if (taxableIncome > 0 && stateTaxdeDuctions) {
+        if (taxableIncome > 0 && typeof stateTaxdeDuctions !== 'undefined' && stateTaxdeDuctions) {
             taxableIncome = taxableIncome - stateTaxdeDuctions;
         }
 
@@ -35,7 +36,7 @@ module.exports = {
             if (taxableIncome >= stateTaxBrackets[i]) {
 
                 chunk = 0;
-                if (stateTaxBrackets[i + 1] && stateTaxBrackets[i + 1] !== 0) {
+                if (typeof stateTaxBrackets[i + 1] !== 'undefined' && stateTaxBrackets[i + 1] !== 0) {
                     if (stateTaxBrackets[i + 1] < taxableIncome) {
                         chunk = stateTaxBrackets[i + 1] - processedIncome;
                     } else {
@@ -62,7 +63,7 @@ module.exports = {
     },
     getStateTaxYTD: async (state_tax_total, pre_stub_state_tax_ytd_total, previ_payDate_year, current_payDate_year,  month, tdiff)=> {
 
-        if (pre_stub_state_tax_ytd_total) {
+        if (typeof pre_stub_state_tax_ytd_total !== 'undefined') {
             if (previ_payDate_year != current_payDate_year) {
                 var state_tax_ytd_total = Math.round(state_tax_total * 100) / 100;
             } else {
