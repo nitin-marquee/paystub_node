@@ -14,36 +14,293 @@ module.exports = {
 
     calculate: async () => {
 
+		
+		var cTotal 	= REGEXPATTERN.converttofloat($postarr['cTotal']);
+		var current1 	= REGEXPATTERN.converttofloat($postarr['current1']);
+		var current2 	= REGEXPATTERN.converttofloat($postarr['current2']);
+		var current3 	= REGEXPATTERN.converttofloat($postarr['current3']);
+		var current4 	= REGEXPATTERN.converttofloat($postarr['current4']);
+		var current5 	= REGEXPATTERN.converttofloat($postarr['current5']);
+		var current6 	= REGEXPATTERN.converttofloat($postarr['current6']);
+		var current7   = REGEXPATTERN.converttofloat($postarr['current7']);
+		var current8   = REGEXPATTERN.converttofloat($postarr['current8']);
+		var custome_deduction_count = $postarr['custome_deduction_count'];
+		var custome_earnings_count =$postarr['custome_earnings_count'];
+		var totalCustomeEarnings=0;
+		var totalYtdCustomeEarnings=0;
+		var state  	= $postarr['state'];
+		var payMode 	= $postarr['payMode'];
+		var exemp 		= intval($postarr['exemp']);
+		var mStatus 	= strtolower($postarr['mStatus']);
+		var pay_date 	= $postarr['pay_date'];
+		var away_date 	= isset($postarr['away_date'])? $postarr['away_date'] : '';
+		var empYTD 	= $postarr['empYTD'];
+		var empType    = $postarr['empType'];
+		var paymentType  =$postarr['paymentType'];
+		var pay_period_start 	= $postarr['pay_period_start'];
+		var pay_period_end 	= $postarr['pay_period_end'];
+		var output = array();
+		var duration = '';
+		var month = date("m", strtotime($pay_date));
+		var year = date("Y", strtotime($pay_date));
+		var day = date("d", strtotime($pay_date));
+		var term = 0;
+
+		var current_payDate_year=$year;
+
+		var diffDate= date_diff(date_create($pay_period_end), date_create($pay_period_start));
+
+		var diffDay=$diffDate->format('%a');
+
+		//print_r($diffDay);
+		var previ_payDate_year = date("Y",strtotime("-".($diffDay+1)." days",strtotime($pay_date)));
+
+		var output['pay_period_end'] = str_replace("/", "/", $pay_period_end);
+		var output['pay_date'] = $pay_date;
+
+		var ddate = date("Y-m-d", strtotime($pay_date));
+		var date = new DateTime($ddate);
+
+		// Calculate working days of ther year
+		var endDate = strtotime($ddate);
+		var startDate = strtotime($year."-01-01");
+		var days = ($endDate - $startDate) / 86400 + 1;
+		var no_full_weeks = floor($days / 7);
+		var no_remaining_days = fmod($days, 7);
+		var the_first_day_of_week = date("N", $startDate);
+		var the_last_day_of_week = date("N", $endDate);
+		if ($the_first_day_of_week <= $the_last_day_of_week) {
+			if ($the_first_day_of_week <= 6 && 6 <= $the_last_day_of_week) $no_remaining_days--;
+			if ($the_first_day_of_week <= 7 && 7 <= $the_last_day_of_week) $no_remaining_days--;
+		}
+		else {
+			if ($the_first_day_of_week == 7) {
+				$no_remaining_days--;
+
+				if ($the_last_day_of_week == 6) {
+					$no_remaining_days--;
+				}
+			}
+			else {
+				$no_remaining_days -= 2;
+			}
+		}
+	   	$workingDays = $no_full_weeks * 5;
+		if ($no_remaining_days > 0 )
+		{
+		  $workingDays += $no_remaining_days;
+		}
+
+		switch (payMode) {
+			case 260:
+				duration = 'daily';
+				month = 1;
+				term = workingDays;
+				break;
+			case 52:
+				duration = 'weekly';
+				month = 1;
+				days = $date->format("z")+1;
+				term = ceil($days / 7);
+				term = term==53?52:term;
+				break;
+			case 26:
+				duration = 'biweekly';
+				month = 1;
+				days = $date->format("z")+1;
+				term = ceil($days / 14);
+				term = term==27?26:term;
+				break;
+			case 12:
+				duration = 'monthly';
+				month = 1;
+				term =  $date->format("m");
+				term = $term==13?12:$term;
+				break;
+			case 24:
+				duration = 'semimonthly';
+				month = 1;
+				days = $date->format("z")+1;
+				term = ceil($days / 15);
+				term = term==25?24:term;
+				break;
+			case 4:
+				duration = 'quarterly';
+				month = 1;
+				months = $date->format("m");
+				term = ceil($months / 3);
+				break;
+			case 2:
+				duration = 'semiannual';
+				month = 1;
+				months = $date->format("m");
+				term = ceil($months / 6);
+				break;
+			case 1:
+				duration = 'annual';
+				month = 1;
+				term = 1;
+				break;
+		}
+		$output['pay_period_start'] = $pay_period_start;
+
+		// check if year is same or else generate as first stub
+		$year2 = date("Y", strtotime($output['pay_period_start']));
+		$makeItNew = 0;
+
+		if ($previ_payDate_year != $current_payDate_year) {
+			$makeItNew = 1;
+			term = 1;
+		}
+
+		$tdiff = 1;
+		$indexn = $i_index+1;
+		if($empYTD!=''){
+			if($indexn == $empYTD){
+				$tdiff=0;
+			}else if($empYTD > term){
+				$tdiff = term - 1;
+			}else{
+				$tdiff = $empYTD - $indexn;
+			}
+		} else {
+			$tdiff = $term - 1;
+		}
+
+		if($empType=='contractor'){
+			if(!empty($pre_stub)){
+				if($makeItNew==1)
+				{
+					$output['tytd'] = $cTotal;
+					$output['ytd1'] = $current1;
+					$output['ytd2'] = $current2;
+					$output['ytd3'] = $current3;
+					$output['ytd4'] = $current4;
+					$output['ytd5'] = $current5;
+					$output['ytd6'] = $current6;
+					$output['ytd7'] = $current7;
+					$output['ytd8'] = $current8;
+					for($k=1;$k<=$custome_earnings_count;$k++){
+						$output['custome_earnings_ytd'.$k.'']=$postarr['custome_earnings_current'.$k.''];
+					}
+				}
+				else
+				{
+					$output['tytd'] = $cTotal+REGEXPATTERN.converttofloat($pre_stub['tytd']);
+					$output['ytd1'] = $current1+REGEXPATTERN.converttofloat($pre_stub['ytd1']);
+					$output['ytd2'] = $current2+REGEXPATTERN.converttofloat($pre_stub['ytd2']);
+					$output['ytd3'] = $current3+REGEXPATTERN.converttofloat($pre_stub['ytd3']);
+					$output['ytd4'] = $current4+REGEXPATTERN.converttofloat($pre_stub['ytd4']);
+					$output['ytd5'] = $current5+REGEXPATTERN.converttofloat($pre_stub['ytd5']);
+					$output['ytd6'] = $current6+REGEXPATTERN.converttofloat($pre_stub['ytd6']);
+					$output['ytd7'] = $current7+REGEXPATTERN.converttofloat($pre_stub['ytd7']);
+					$output['ytd8'] = $current8+REGEXPATTERN.converttofloat($pre_stub['ytd8']);
+					for($k=1;$k<=$custome_earnings_count;$k++){
+						$output['custome_earnings_ytd'.$k.'']=$postarr['custome_earnings_current'.$k.'']+REGEXPATTERN.converttofloat($pre_stub['custome_earnings_ytd'.$k.'']);
+					}
+				}
+			}else{
+
+				$output['tytd'] = number_format($cTotal*$month*$tdiff, 2, '.', '');
+				$output['ytd1'] = number_format($current1*$month*$tdiff, 2, '.', '');
+				$output['ytd2'] = number_format($current2*$month*$tdiff, 2, '.', '');
+				$output['ytd3'] = number_format($current3*$month*$tdiff, 2, '.', '');
+				$output['ytd4'] = number_format($current4*$month*$tdiff, 2, '.', '');
+				$output['ytd5'] = number_format($current5*$month*$tdiff, 2, '.', '');
+				$output['ytd6'] = number_format($current6*$month*$tdiff, 2, '.', '');
+				$output['ytd7'] = number_format($current7*$month*$tdiff, 2, '.', '');
+				$output['ytd8'] = number_format($current8*$month*$tdiff, 2, '.', '');
+				for($k=1;$k<=$custome_earnings_count;$k++){
+					$output['custome_earnings_ytd'.$k.'']=number_format($postarr['custome_earnings_current'.$k.'']*$month*$tdiff, 2, '.', '');
+				}
+			}
+
+			$totalCustomeDeduction=0;
+
+			for($k=1;$k<=$custome_deduction_count;$k++){
+				if (isset($pre_stub['custome_deduction_ytd_total'.$k.''])) {
+					if ($previ_payDate_year != $current_payDate_year) {
+						$output['custome_deduction_ytd_total'.$k.''] = $postarr['custome_deduction_total'.$k.''];
+					}else{
+						if($postarr['custome_deduction_total'.$k.''] !=0){
+							$output['custome_deduction_ytd_total'.$k.''] = $postarr['custome_deduction_total'.$k.''] + REGEXPATTERN.converttofloat($pre_stub['custome_deduction_ytd_total'.$k.'']);
+						}else{
+							$output['custome_deduction_ytd_total'.$k.'']=$postarr['custome_deduction_total'.$k.''];
+						}
+					}
+				} else {
+					$output['custome_deduction_ytd_total'.$k.'']=number_format(REGEXPATTERN.converttofloat($postarr['custome_deduction_total'.$k.'']*$tdiff), 2, '.', '');
+				}
+				$totalCustomeDeduction=number_format(REGEXPATTERN.converttofloat((float)str_replace(",", "", $totalCustomeDeduction)+(float)str_replace(",", "", $postarr['custome_deduction_total'.$k.''])), 2, '.', '');
+				$totalYtdCustomeDeduction=number_format(REGEXPATTERN.converttofloat((float)str_replace(",", "", $totalYtdCustomeDeduction)+(float)str_replace(",", "", $output['custome_deduction_ytd_total'.$k.''])), 2, '.', '');
+			}
+
+			$output['deductions'] = number_format(REGEXPATTERN.converttofloat($totalCustomeDeduction), 2, '.', '');
+			$output['net_pay'] = REGEXPATTERN.converttofloat($cTotal - bcdiv(REGEXPATTERN.converttofloat($output['deductions']), 1, 2));
+			$output['ytd_deductions'] = number_format(REGEXPATTERN.converttofloat((float)str_replace(",", "", $totalYtdCustomeDeduction)), 2, '.', '');
+			$output['ytd_net_pay'] = REGEXPATTERN.converttofloat($output['tytd'] - bcdiv($output['ytd_deductions'], 1, 2));
+
+			return $output;
+		}
+
+		if(!empty($pre_stub))
+		{
+			if($makeItNew==1)
+			{
+				$output['tytd'] = $cTotal;
+				$output['ytd1'] = $current1;
+				$output['ytd2'] = $current2;
+				$output['ytd3'] = $current3;
+				$output['ytd4'] = $current4;
+				$output['ytd5'] = $current5;
+				$output['ytd6'] = $current6;
+				$output['ytd7'] = $current7;
+				for($k=1;$k<=$custome_earnings_count;$k++){
+					$output['custome_earnings_ytd'.$k.'']=$postarr['custome_earnings_current'.$k.''];
+				}
+			}
+			else
+			{
+				$output['tytd'] = $cTotal+REGEXPATTERN.converttofloat($pre_stub['tytd']);
+				$output['ytd1'] = $current1+REGEXPATTERN.converttofloat($pre_stub['ytd1']);
+				$output['ytd2'] = $current2+REGEXPATTERN.converttofloat($pre_stub['ytd2']);
+				$output['ytd3'] = $current3+REGEXPATTERN.converttofloat($pre_stub['ytd3']);
+				$output['ytd4'] = $current4+REGEXPATTERN.converttofloat($pre_stub['ytd4']);
+				$output['ytd5'] = $current5+REGEXPATTERN.converttofloat($pre_stub['ytd5']);
+				$output['ytd6'] = $current6+REGEXPATTERN.converttofloat($pre_stub['ytd6']);
+				$output['ytd7'] = $current7+REGEXPATTERN.converttofloat($pre_stub['ytd7']);
+				for($k=1;$k<=$custome_earnings_count;$k++){
+					$output['custome_earnings_ytd'.$k.'']=number_format(REGEXPATTERN.converttofloat($postarr['custome_earnings_current'.$k.''])+REGEXPATTERN.converttofloat($pre_stub['custome_earnings_ytd'.$k.'']), 2, '.', '');
+				}
+			}
+		}
+		else
+		{
+			$output['tytd'] = number_format($cTotal*$month*$tdiff, 2, '.', '');
+			$output['ytd1'] = number_format($current1*$month*$tdiff, 2, '.', '');
+			$output['ytd2'] = number_format($current2*$month*$tdiff, 2, '.', '');
+			$output['ytd3'] = number_format($current3*$month*$tdiff, 2, '.', '');
+			$output['ytd4'] = number_format($current4*$month*$tdiff, 2, '.', '');
+			$output['ytd5'] = number_format($current5*$month*$tdiff, 2, '.', '');
+			$output['ytd6'] = number_format($current6*$month*$tdiff, 2, '.', '');
+			$output['ytd7'] = number_format($current7*$month*$tdiff, 2, '.', '');
+			for($k=1;$k<=$custome_earnings_count;$k++){
+				$output['custome_earnings_ytd'.$k.'']=number_format(REGEXPATTERN.converttofloat($postarr['custome_earnings_current'.$k.''])*$month*$tdiff, 2, '.', '');
+			}
+		}
+
         
         ////////////////////Federal Tax//////////////////////////////////
         /////////////////////////////////////////////////////////////////
         var federal_tax = paystubConfig[year].federal_tax;
-        var federalTax = 0.00;
-        if (federal_tax) {
+        var federalTax = 0;
+        if (typeof federal_tax !=='undefined' && federal_tax !=='') {
             federalTax = FEDERALTAXHELPER.getFederalTax(year, maritalStatus, paymentTotal, paymentMode, exemp);
         } else {
             federalTax = FEDERALTAXHELPER.getFederalTaxByAnnual(year, maritalStatus, paymentTotal, paymentMode, exemp);
         }
         var federal_tax_ytd_total = FEDERALTAXHELPER.getFederalTaxYTD(federalTax, pre_stub_federal_tax_ytd_total, previ_payDate_year, current_payDate_year,  month, term) 
-        // var federal_tax_ytd_total = 0;
-        // if (federalTax == 0 && exemp != 0) {
-        //     federalTax = Math.round(0 * 100) / 100;
-        //     if (pre_stub_federal_tax_ytd_total) {
-        //         federal_tax_ytd_total = Math.round(pre_stub_federal_tax_ytd_total * 100) / 100;
-        //     } else {
-        //         federal_tax_ytd_total = federalTax;
-        //     }
-        // } else if (federalTax != 0) {
-        //     if (pre_stub_federal_tax_ytd_total) {
-        //         if (previ_payDate_year && current_payDate_year && previ_payDate_year != current_payDate_year) {
-        //             federal_tax_ytd_total = federalTax;
-        //         } else {
-        //             federal_tax_ytd_total = Math.round((federalTax + pre_stub_federal_tax_ytd_total) * 100) / 100;
-        //         }
-        //     } else {
-        //         federal_tax_ytd_total = Math.round((federalTax * month * term) * 100) / 100;
-        //     }
-        // }
+
 
         ////////////////////Federal Tax//////////////////////////////////
         /////////////////////////////////////////////////////////////////
@@ -53,15 +310,7 @@ module.exports = {
 
         var state_tax_total = STATETAXHELPER.getStateTax(year, maritalStatus, paymentTotal, paymentMode, state);
         var state_tax_ytd_total = STATETAXHELPER.getStateTaxYTD(state_tax_total, pre_stub_state_tax_ytd_total, previ_payDate_year, current_payDate_year,  month, tdiff);
-        // if (pre_stub_state_tax_ytd_total) {
-        //     if (previ_payDate_year != current_payDate_year) {
-        //         var state_tax_ytd_total = Math.round(state_tax_total * 100) / 100;
-        //     } else {
-        //        var state_tax_ytd_total = Math.round((tate_tax_total + pre_stub_state_tax_ytd_total)*100)/100;
-        //     }
-        // } else {
-        //     var state_tax_ytd_total =  Math.round(state_tax_total * month * tdiff*100)/100;
-        // }
+       
         ////////////////////stateTax/////////////////////////////////////
         /////////////////////////////////////////////////////////////////
         
@@ -70,7 +319,7 @@ module.exports = {
         var fica_medicare_total = MEDITAXHELPER.getMedicareTax(year, paymentTotal, paymentMode);
 		
          var fica_medicare_ytd_total = MEDITAXHELPER.getMedicareTaxYTD(year, paymentTotal, paymentMode, fica_medicare_total, pre_stub_fica_medicare_ytd_total, previ_payDate_year, current_payDate_year, month, tdiff);
-		//fica_medicare_total = number_format(round(fica_medicare_total * 100) / 100, 2, '.', '');
+		//fica_medicare_total = REGEXPATTERN.number_format(round(fica_medicare_total * 100) / 100);
 		// if (pre_stub_fica_medicare_ytd_total) {
 		// 	if (previ_payDate_year != current_payDate_year) {
 		// 		fica_medicare_ytd_total = fica_medicare_total;
@@ -91,42 +340,12 @@ module.exports = {
 		
 		/////////////////////////////////////////////////////////////////
 		////////////////////SCOAIL SECURITY//////////////////////////////
-		social = output['tytd'] * soci[year]['p1']; //18600
-		sRestAmount = 0;
-		sTotal = cTotal * soci[year]['p1'];
-		if (social > soci[year]['max']) {
-			sRestAmount = social - soci[year]['max']; //11253
-			social = soci[year]['max'];
-			sTotal = 0;
-			if (isset(pre_stub['fica_social_security_ytd_total'])) {
-				sTotal = social - number_format(this->converttofloat(pre_stub['fica_social_security_ytd_total']), 2, '.', '');
-			} else {
-				sTotal = cTotal * soci[year]['p1'];
-			}
-			if(sTotal>0){
-				output['fica_social_security_total'] = number_format(sTotal, 2, '.', '');
-			}else if(sTotal==0){
-				sTotal += cTotal * soci[year]['p1'];
-			} else {
- 				output['fica_social_security_total'] = 0;
-			}
-			output['fica_social_security_ytd_total'] = number_format(social , 2, '.', '');
-		} else {
-			output['fica_social_security_total'] = number_format(this->converttofloat(sTotal), 2, '.', '');
-			if (isset(pre_stub['fica_social_security_ytd_total'])) {
-				if (previ_payDate_year != current_payDate_year) {
-					output['fica_social_security_ytd_total'] = number_format(output['fica_social_security_total'], 2, '.', '');
-				}else{
-					if(pre_stub['fica_social_security_ytd_total'] > soci[year]['max']){
-						output['fica_social_security_ytd_total'] = number_format(soci[year]['max'], 2, '.', '');
-					}else{
-						output['fica_social_security_ytd_total'] = number_format(output['fica_social_security_total'] + this->converttofloat(pre_stub['fica_social_security_ytd_total']), 2, '.', '');
-					}
-				}
-			} else {
-				output['fica_social_security_ytd_total'] = number_format(this->converttofloat(social), 2, '.', '');
-			}
-		}
+
+		var social_total =  SOCIALTAXHELPER.getMedicareTax(year, paymentTotal, paymentMode);
+		
+		var social_ytd_total = SOCIALTAXHELPER.getMedicareTaxYTD(year, paymentTotal, paymentMode, fica_medicare_total, pre_stub_fica_medicare_ytd_total, previ_payDate_year, current_payDate_year, month, tdiff);
+
+		
 
 		////////////////////SCOAIL SECURITY//////////////////////////////
 		/////////////////////////////////////////////////////////////////
@@ -134,244 +353,27 @@ module.exports = {
 		/////////////////////////////////////////////////////////////////
 		////////////////////SDI SECURITY//////////////////////////////
 
-		output['sdi_total'] = 0;
-		output['sdi_ytd_total'] = 0;
-		if (isset(sdi[year][state]) && !empty(sdi[year][state])) {
-			formula = sdi[year][state][year]['flag'][0];
-			switch (formula) {
-				case 1:
-					maxtax = sdi[year][state][year]['maxtax'][0];
-					percent = sdi[year][state][year]['percent'][0];
-					max = sdi[year][state][year]['max'][0];
-					sdi_tax = 0;
-					if (output['tytd'] < max) {
-						sdi_tax = output['tytd'] * (percent / 100);
-						output['sdi_total'] = number_format(cTotal * (percent / 100), 2, '.', ''); //sdi_tax/(month*term);
-					} else if (output['tytd'] >= max) {
-						sdi_tax = maxtax;
-						if (isset(pre_stub['sdi_ytd_total'])) {
-							diff = sdi_tax - number_format(this->converttofloat(pre_stub['sdi_ytd_total']), 2, '.', '');
-						} else {
-							diff = 0;
-						}
-						if (diff > 0) {
-							output['sdi_total'] = diff;
-						} else {
-							output['sdi_total'] = 0;
-						}
-					}
+		var sdi_total =  SDITAXHELPER .getSdiTax(year, paymentTotal, paymentMode);
+		
+		var sdi_ytd_total = SDITAXHELPER.getSdiTaxYTD(year, paymentTotal, paymentMode, fica_medicare_total, pre_stub_fica_medicare_ytd_total, previ_payDate_year, current_payDate_year, month, tdiff);
 
-					if (isset(pre_stub['sdi_ytd_total'])) {
-						if (previ_payDate_year != current_payDate_year) {
-							output['sdi_ytd_total'] = output['sdi_total'];
-						}else{
-							if(pre_stub['sdi_ytd_total'] >=maxtax){
-								output['sdi_ytd_total']=maxtax;
-							}else{
-								output['sdi_ytd_total'] = output['sdi_total'] + this->converttofloat(pre_stub['sdi_ytd_total']);
-							}
-						}
-					} else {
-						output['sdi_ytd_total'] = number_format(sdi_tax , 2, '.', '');
-					}
-					break;
-				case 2:
-					percent = sdi[year][state][year]['percent'][0];
-					maxtax = sdi[year][state][year]['maxtax'][0];
-					sdi_tax = 0;
-					sdi_tax = number_format(cTotal * (percent / 100), 2, '.', '');
-					if (duration == 'weekly') {
-						if (sdi_tax >= maxtax) {
-							sdi_tax = number_format(maxtax, 2, '.', '');
-							output['sdi_total'] = sdi_tax;
-						} else {
-							output['sdi_total'] = sdi_tax;
-						}
-					} else if (duration == 'biweekly' || duration == 'semimonthly') {
-						maxtax = maxtax * 2;
-						if (sdi_tax >= maxtax) {
-							sdi_tax = number_format(maxtax, 2, '.', '');
-							output['sdi_total'] = sdi_tax;
-						} else {
-							output['sdi_total'] = sdi_tax;
-						}
-					} else if (duration == 'monthly') {
-						maxtax = maxtax * 4;
-						if (sdi_tax >= maxtax) {
-							sdi_tax = number_format(maxtax, 2, '.', '');
-							output['sdi_total'] = sdi_tax;
-						} else {
-							output['sdi_total'] = sdi_tax;
-						}
-					}else if (duration == 'annual') {
-						maxtax = maxtax * 52;
-						if (sdi_tax >= maxtax) {
-							sdi_tax = number_format(maxtax, 2, '.', '');
-							output['sdi_total'] = sdi_tax;
-						} else {
-							output['sdi_total'] = sdi_tax;
-						}
-					}else if (duration == 'quarterly') {
-						maxtax = maxtax * 12;
-						if (sdi_tax >= maxtax) {
-							sdi_tax = number_format(maxtax, 2, '.', '');
-							output['sdi_total'] = sdi_tax;
-						} else {
-							output['sdi_total'] = sdi_tax;
-						}
-					}else if (duration == 'semiannual') {
-						maxtax = maxtax * 24;
-						if (sdi_tax >= maxtax) {
-							sdi_tax = number_format(maxtax, 2, '.', '');
-							output['sdi_total'] = sdi_tax;
-						} else {
-							output['sdi_total'] = sdi_tax;
-						}
-					}else if (duration == 'daily') {
-						maxtax = maxtax / 7;
-						if (sdi_tax >= maxtax) {
-							sdi_tax = number_format(maxtax, 2, '.', '');
-							output['sdi_total'] = sdi_tax;
-						} else {
-							output['sdi_total'] = sdi_tax;
-						}
-					}
-					if (isset(pre_stub['sdi_ytd_total'])) {
-						if (previ_payDate_year != current_payDate_year) {
-							output['sdi_ytd_total'] = output['sdi_total'];
-						}else{
-							output['sdi_ytd_total'] = output['sdi_total'] + this->converttofloat(pre_stub['sdi_ytd_total']);
-						}
-						//echo output['sdi_ytd_total']." = ".output['sdi_total']."+".pre_stub['sdi_ytd_total']; echo ":<br>";
-					} else {
-						output['sdi_ytd_total'] = number_format(sdi_tax * month * tdiff, 2, '.', '');
-					}
-					break;
-			}
-		}
-		output['sdi_total'] = this->converttofloat(output['sdi_total']);
-		output['sdi_ytd_total'] = this->converttofloat(output['sdi_ytd_total']);
-
+		
 		////////////////////SDI SECURITY//////////////////////////////
 		/////////////////////////////////////////////////////////////////
 
 		/////////////////////////////////////////////////////////////////
 		////////////////////SUI SECURITY//////////////////////////////
-
-		output['sui_total'] = 0;
-		output['sui_ytd_total'] = 0;
-		if (isset(sui[year][state]) && !empty(sui[year][state])) {
-			formula = sui[year][state][year]['flag'][0];
-			switch (formula) {
-				case 1:
-					maxtax = sui[year][state][year]['maxtax'][0];
-					percent = sui[year][state][year]['percent'][0];
-					max = sui[year][state][year]['max'][0];
-					sui_tax = 0;
-					if (output['tytd'] < max) {
-						sui_tax = number_format(output['tytd'] * (percent / 100), 2, '.', '');
-						output['sui_total'] = number_format(cTotal * (percent / 100), 2, '.', ''); //sui_tax/(month*term);
-						//echo sui_tax." = ".output['tytd']."*(".(percent/100).")";echo "<br/>";
-						//echo output['sui_total']." = ".sui_tax."/(".month*term.")";echo "<br/>";
-					} else if (output['tytd'] >= max) {
-						//print_r(output);
-						sui_tax = maxtax;
-						if (isset(pre_stub['sui_ytd_total'])) {
-							diff = sui_tax - number_format(this->converttofloat(pre_stub['sui_ytd_total']), 2, '.', '');
-						} else {
-							diff = 0;
-						}
-						if (diff > 0) {
-							output['sui_total'] = diff;
-						} else {
-							output['sui_total'] = 0;
-						}
-					}
-					if (isset(pre_stub['sui_ytd_total'])) {
-						if (previ_payDate_year != current_payDate_year) {
-							output['sui_ytd_total'] = output['sui_total'];
-						}else{
-							if(pre_stub['sui_ytd_total'] >=maxtax){
-								output['sui_ytd_total']=maxtax;
-							}else{
-								output['sui_ytd_total'] = output['sui_total'] + this->converttofloat(pre_stub['sui_ytd_total']);
-							}
-						}
-					} else {
-						output['sui_ytd_total'] = number_format(sui_tax, 2, '.', '');
-					}
-
-					break;
-				case 5:
-					percent = sui[year][state][year]['percent'][0];
-					sui_tax = number_format(output['tytd'] * (percent / 100), 2, '.', '');
-					output['sui_total'] = number_format(cTotal * (percent / 100), 2, '.', ''); //sui_tax/(month*term);
-					if (isset(pre_stub['sui_ytd_total'])) {
-						if (previ_payDate_year != current_payDate_year) {
-							output['sui_ytd_total'] = output['sui_total'];
-						}else{
-							output['sui_ytd_total'] = output['sui_total'] + this->converttofloat(pre_stub['sui_ytd_total']);
-						}
-					} else {
-						output['sui_ytd_total'] = number_format(sui_tax, 2, '.', '');
-					}
-					break;
-			}
-		}
-		output['sui_total'] = this->converttofloat(output['sui_total']);
-		output['sui_ytd_total'] = this->converttofloat(output['sui_ytd_total']);
-
+		var sui_total= SUITAXHELPER.getSuiTax(year, paymentTotal,previ_payDate_year , current_payDate_year) ; 
+		var sui_ytd_total = SUITAXHELPER.getSuiTaxYTD(year, paymentTotal,previ_payDate_year , current_payDate_year, sui_total, pre_stub_sui_ytd_total) ;
+		
 		////////////////////SUI SECURITY//////////////////////////////
 		/////////////////////////////////////////////////////////////////
 
 		/////////////////////////////////////////////////////////////////
-		////////////////////flv SECURITY//////////////////////////////
-
-		output['flv_total'] = 0;
-		output['flv_ytd_total'] = 0;
-		if (isset(flv[year][state]) && !empty(flv[year][state])) {
-			formula = flv[year][state][year]['flag'][0];
-			switch (formula) {
-				case 1:
-					maxtax = flv[year][state][year]['maxtax'][0];
-					percent = flv[year][state][year]['percent'][0];
-					max = flv[year][state][year]['max'][0];
-					flv_tax = 0;
-					if (output['tytd'] < max) {
-						flv_tax = output['tytd'] * (percent / 100);
-						output['flv_total'] = cTotal * (percent / 100); //flv_tax/(month*term);
-					} else if (output['tytd'] >= max) {
-						flv_tax = maxtax;
-						if (isset(pre_stub['flv_ytd_total'])) {
-							diff = flv_tax - number_format(this->converttofloat(pre_stub['flv_ytd_total']), 2, '.', '');
-						} else {
-							diff = 0;
-						}
-						if (diff > 0) {
-							output['flv_total'] = diff;
-						} else {
-							output['flv_total'] = 0;
-						}
-
-					}
-					if (isset(pre_stub['flv_ytd_total'])) {
-						if (previ_payDate_year != current_payDate_year) {
-							output['flv_ytd_total'] = output['flv_total'];
-						}else{
-							if(pre_stub['flv_ytd_total'] >=maxtax){
-								output['flv_ytd_total']=maxtax;
-							}else{
-								output['flv_ytd_total'] = output['flv_total'] + this->converttofloat(pre_stub['flv_ytd_total']);
-							}
-						}
-					} else {
-						output['flv_ytd_total'] = number_format(flv_tax, 2, '.', '');
-					}
-					break;
-			}
-		}
-		output['flv_total'] = this->converttofloat(output['flv_total']);
-		output['flv_ytd_total'] = this->converttofloat(output['flv_ytd_total']);
+		////////////////////flv SECURITY////////////////////////////// 
+		var flv_total = FLVTAXHELPER.getFlvTax(year,state, paymentTotal, pre_stub_flv_ytd_total, tytd) ;
+		var flv_ytd_total = FLVTAXHELPER.getFlvTaxYTD (year,state, paymentTotal, tytd ,previ_payDate_year,  current_payDate_year, flv_total, pre_stub_flv_ytd_total, ) ;
+		
 
 		////////////////////SUI SECURITY/////////////////////////////////
 		/////////////////////////////////////////////////////////////////
@@ -379,206 +381,46 @@ module.exports = {
 		/////////////////////////////////////////////////////////////////
 		////////////////////WC SECURITY/////////////////////////////////
 
-		output['wc_total'] = 0;
-		output['wc_ytd_total'] = 0;
-		if (isset(wc[year][state]) && !empty(wc[year][state])) {
-			formula = wc[year][state][year]['flag'][0];
-			switch (formula) {
-				case 1:
-					maxtax = wc[year][state][year]['maxtax'][0];
-					percent = wc[year][state][year]['percent'][0];
-					max = wc[year][state][year]['max'][0];
-					wc_tax = 0;
-					if (output['tytd'] < max) {
-						wc_tax = output['tytd'] * (percent / 100);
-						output['wc_total'] = cTotal * (percent / 100); //wc_tax/(month*term);
-					} else if (output['tytd'] >= max) {
-						wc_tax = maxtax;
-						if (isset(pre_stub['wc_ytd_total'])) {
-							diff = wc_tax - number_format(this->converttofloat(pre_stub['wc_ytd_total']), 2, '.', '');
-						} else {
-							diff = 0;
-						}
-						if (diff > 0) {
-							output['wc_total'] = diff;
-						} else {
-							output['wc_total'] = 0;
-						}
-					}
-					if (isset(pre_stub['wc_ytd_total'])) {
-						if (previ_payDate_year != current_payDate_year) {
-							output['wc_ytd_total'] = output['wc_total'];
-						}else{
-							output['wc_ytd_total'] = output['wc_total'] + this->converttofloat(pre_stub['wc_ytd_total']);
-						}
-					} else {
-						output['wc_ytd_total'] = number_format(wc_tax, 2, '.', '');
-					}
-					break;
-				case 3:
-					wc_tax = 0;
-					if (duration == 'weekly') {
-						wc_tax = wc[year][state][year]['weekly'][0]; //cTotal*(wc[year][state]['weekly'][0]/100);
-					} else if (duration == 'biweekly') {
-						wc_tax = wc[year][state][year]['biweekly'][0]; //cTotal*(wc[year][state]['biweekly'][0]/100);
-					} else if (duration == 'semimonthly') {
-						wc_tax = wc[year][state][year]['semimonthly'][0]; //cTotal*(wc[year][state]['biweekly'][0]/100);
-					} else if (duration == 'monthly') {
-						wc_tax = wc[year][state][year]['monthly'][0]; //cTotal*(wc[year][state]['biweekly'][0]/100);
-					} else if (duration == 'annual') {
-						wc_tax = wc[year][state][year]['annual'][0];
-					}else if (duration == 'quarterly') {
-						wc_tax = wc[year][state][year]['quarterly'][0];
-					}else if (duration == 'semiannual') {
-						wc_tax = wc[year][state][year]['semiannual'][0];
-					}else if (duration == 'daily') {
-						wc_tax = wc[year][state][year]['daily'][0];
-					} else {
-						wc_tax = 0;
-					}
-					output['wc_total'] = wc_tax;
-					if (isset(pre_stub['wc_ytd_total'])) {
-						if (previ_payDate_year != current_payDate_year) {
-							output['wc_ytd_total'] = output['wc_total'];
-						}else{
-							output['wc_ytd_total'] = output['wc_total'] + this->converttofloat(pre_stub['wc_ytd_total']);
-						}
-					} else {
-						output['wc_ytd_total'] = number_format(wc_tax * month * tdiff, 2, '.', '');
-					}
-					break;
-				case 4:
-					wc_tax = 0;
-					wc_tax = total_hours * wc[year][state][year]['percent'][0];
-					output['wc_total'] = wc_tax;
-					if (isset(pre_stub['wc_ytd_total'])) {
-						if (previ_payDate_year != current_payDate_year) {
-							output['wc_ytd_total'] = output['wc_total'];
-						}else{
-							output['wc_ytd_total'] = output['wc_total'] + this->converttofloat(pre_stub['wc_ytd_total']);
-						}
-					} else {
-						output['wc_ytd_total'] = number_format(wc_tax * month * tdiff, 2, '.', '');
-					}
-					break;
-			}
-		}
-		output['wc_total'] = this->converttofloat(output['wc_total']);
-		output['wc_ytd_total'] = this->converttofloat(output['wc_ytd_total']);
+		var wc_total= WCTAXHELPER. ;
+		var wc_ytd_total = WCTAXHELPER. ;
+		
 
 		////////////////////WC SECURITY//////////////////////////////////
 		/////////////////////////////////////////////////////////////////
 		/////////////////////////////////////////////////////////////////
 		////////////////////WF SECURITY//////////////////////////////
-		output['wf_total'] = 0;
-		output['wf_ytd_total'] = 0;
-		if (isset(wf[year][state]) && !empty(wf[year][state])) {
-			formula = wf[year][state][year]['flag'][0];
-			switch (formula) {
-				case 1:
-					maxtax = wf[year][state][year]['maxtax'][0];
-					percent = wf[year][state][year]['percent'][0];
-					max = wf[year][state][year]['max'][0];
-					wf_tax = 0;
-					if (output['tytd'] < max) {
-						output['wf_total'] = number_format(cTotal * (percent / 100), 2, '.', ''); //wf_tax/(month*tdiff);
-						output['wf_total'] = number_format(this->converttofloat(output['wf_total']), 2, '.', '');
-						if (isset(pre_stub['wf_ytd_total'])) {
-							//diff = wf_tax - number_format(this->converttofloat(pre_stub['wf_ytd_total']), 2, '.', '');
-							wf_tax = output['wf_total'] + number_format(this->converttofloat(pre_stub['wf_ytd_total']), 2, '.', '');
-						} else {
-							wf_tax = number_format(this->converttofloat(output['tytd'] * (percent / 100)), 2, '.', '');
-						}
-						//echo "<br />";
-					} else if (output['tytd'] >= max) {
-						wf_tax = maxtax;
-						if (isset(pre_stub['wf_ytd_total'])) {
-							diff = wf_tax - number_format(this->converttofloat(pre_stub['wf_ytd_total']), 2, '.', '');
-						} else {
-							diff = 0;
-						}
-						if (diff > 0) {
-							output['wf_total'] = number_format(diff, 2, '.', '');
-						} else {
-							output['wf_total'] = 0;
-						}
-					}
-					if (isset(pre_stub['wf_ytd_total'])) {
-						if (previ_payDate_year != current_payDate_year) {
-							output['wf_ytd_total'] = output['wf_total'];
-						}else{
-							if(pre_stub['wf_ytd_total'] >=maxtax){
-								output['wf_ytd_total']=maxtax;
-							}else{
-								output['wf_ytd_total'] = output['wf_total'] + this->converttofloat(pre_stub['wf_ytd_total']);
-							}
-						}
-					} else {
-						output['wf_ytd_total'] = wf_tax;
-					}
-					break;
-				case 3:
-					wf_tax = 0;
-					if (duration == 'weekly') {
-						wf_tax = number_format(cTotal * (wf[year][state][year]['weekly'][0] / 100), 2, '.', '');
-					} else if (duration == 'biweekly') {
-						wf_tax = number_format(cTotal * (wf[year][state][year]['biweekly'][0] / 100), 2, '.', '');
-					} else if (duration == 'semimonthly') {
-						wf_tax = number_format(cTotal * (wf[year][state][year]['semimonthly'][0] / 100), 2, '.', '');
-					} else if (duration == 'monthly') {
-						wf_tax = number_format(cTotal * (wf[year][state][year]['monthly'][0] / 100), 2, '.', '');
-					}else if (duration == 'annual') {
-						wf_tax = number_format(cTotal * (wf[year][state][year]['annual'][0] / 100), 2, '.', '');
-					}else if (duration == 'quarterly') {
-						wf_tax = number_format(cTotal * (wf[year][state][year]['quarterly'][0] / 100), 2, '.', '');
-					}else if (duration == 'semiannual') {
-						wf_tax = number_format(cTotal * (wf[year][state][year]['semiannual'][0] / 100), 2, '.', '');
-					} else if (duration == 'daily') {
-						wf_tax = number_format(cTotal * (wf[year][state][year]['daily'][0] / 100), 2, '.', '');
-					}   else {
-						wf_tax = 0;
-					}
-					output['wf_total'] = wf_tax;
-					if (isset(pre_stub['wf_ytd_total'])) {
-						if (previ_payDate_year != current_payDate_year) {
-							output['wf_ytd_total'] = output['wf_total'];
-						}else{
-							output['wf_ytd_total'] = output['wf_total'] + this->converttofloat(pre_stub['wf_ytd_total']);
-						}
-					} else {
-						output['wf_ytd_total'] = number_format(wf_tax * month * tdiff, 2, '.', '');
-					}
-					break;
-			}
-		}
-		output['wf_total'] = this->converttofloat(output['wf_total']);
-		output['wf_ytd_total'] = this->converttofloat(output['wf_ytd_total']);
+
+		var wf_total = WFTAXHELPER. ; 
+		var wf_ytd_total = WFTAXHELPER. ; 
+		
 		////////////////////WF SECURITY//////////////////////////////
 		/////////////////////////////////////////////////////////////
 
 		/////////////////////////////////////////////////////////
 		////////////////////Cutome deduction ////////////////////
 
-		totalCustomeDeduction=0;
-		totalYtdCustomeDeduction=0;
+		var totalCustomeDeduction=0;
+		var totalYtdCustomeDeduction=0;
 
 		for(k=1;k<=custome_deduction_count;k++){
-			if (isset(pre_stub['custome_deduction_ytd_total'.k.''])) {
-				if (previ_payDate_year != current_payDate_year) {
-					output['custome_deduction_ytd_total'.k.''] = postarr['custome_deduction_total'.k.''];
-				}else{
-					if(postarr['custome_deduction_total'.k.''] !=0){
-						output['custome_deduction_ytd_total'.k.''] = postarr['custome_deduction_total'.k.''] + this->converttofloat(pre_stub['custome_deduction_ytd_total'.k.'']);
-					}else{
-						output['custome_deduction_ytd_total'.k.'']=postarr['custome_deduction_total'.k.''];
-					}
-				}
-			} else {
-				output['custome_deduction_ytd_total'.k.'']=number_format(this->converttofloat(postarr['custome_deduction_total'.k.'']*tdiff), 2, '.', '');
-			}
-			totalCustomeDeduction=number_format(this->converttofloat((float)str_replace(",", "", totalCustomeDeduction)+(float)str_replace(",", "", postarr['custome_deduction_total'.k.''])), 2, '.', '');
-			totalYtdCustomeDeduction=number_format(this->converttofloat((float)str_replace(",", "", totalYtdCustomeDeduction)+(float)str_replace(",", "", output['custome_deduction_ytd_total'.k.''])), 2, '.', '');
+			// if (typeof pre_stub['custome_deduction_ytd_total'.k.'']  !== 'undefined') {
+			// 	if (previ_payDate_year != current_payDate_year) {
+			// 		output['custome_deduction_ytd_total'.k.''] = postarr['custome_deduction_total'.k.''];
+			// 	}else{
+			// 		if(postarr['custome_deduction_total'.k.''] !=0){
+			// 			output['custome_deduction_ytd_total'.k.''] = postarr['custome_deduction_total'.k.''] + REGEXPATTERN.converttofloat(pre_stub['custome_deduction_ytd_total'.k.'']);
+			// 		}else{
+			// 			output['custome_deduction_ytd_total'.k.'']=postarr['custome_deduction_total'.k.''];
+			// 		}
+			// 	}
+			// } else {
+			// 	output['custome_deduction_ytd_total'.k.'']=REGEXPATTERN.number_format(REGEXPATTERN.converttofloat(postarr['custome_deduction_total'.k.'']*tdiff));
+			// }
+			// totalCustomeDeduction=REGEXPATTERN.number_format(REGEXPATTERN.converttofloat((float)str_replace(",", "", totalCustomeDeduction)+(float)str_replace(",", "", postarr['custome_deduction_total'.k.''])));
+			// totalYtdCustomeDeduction=REGEXPATTERN.number_format(REGEXPATTERN.converttofloat((float)str_replace(",", "", totalYtdCustomeDeduction)+(float)str_replace(",", "", output['custome_deduction_ytd_total'.k.''])));
 		}
+
+
 
 		////////////////////Cutome deduction ////////////////////
 		/////////////////////////////////////////////////////////

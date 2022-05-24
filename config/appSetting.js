@@ -15,16 +15,16 @@ var state = "GA";
 
 // // var federalTaxExceed = [federalDuration][mStatus];
 // // console.log(JSON.stringify(federalTaxExceed));
-// var cTotal = 2000;
+// var paymentTotal = 2000;
 // var payMode = 12;
 // var exp = paystubConfig[year].exp;
 //   var federalTax=0;
 //   var output = 0;
 //   var federalDuration = "annual";
 //   if (exemp > 0){
-//       taxableAmount = (cTotal * payMode) - (exp[year][federalDuration][year]['rate'] * exemp);
+//       taxableAmount = (paymentTotal * payMode) - (exp[year][federalDuration][year]['rate'] * exemp);
 //   }else{
-//       taxableAmount= cTotal * payMode;
+//       taxableAmount= paymentTotal * payMode;
 //   }
 
 //   for(var i=0;i<=6;i++)

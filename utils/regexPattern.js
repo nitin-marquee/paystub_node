@@ -1,9 +1,7 @@
 module.exports = {
-  extraWhitespace: /\s\s+/g,
-  userName: /^(?=.{8,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$/,
 
-  numberFormater: async (number) => {
-    return (number).toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
+  number_format: async (number) => {
+    return parseFloat(number.toFixed(2));
   },
   converttofloat: async (number) => {
 		var number = parseFloat(number.replace(/[^\d\.]/, ""));

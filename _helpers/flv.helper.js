@@ -2,100 +2,88 @@ const REGEXPATTERN = require('../utils/regexPattern');
 
 module.exports = {
 
-    getFlvTax: async (year, maritalStatus, paymentTotal, paymentMode, exemp = null) => {
+    getFlvTax: async (year,state, paymentTotal, pre_stub_flv_ytd_total, tytd) => {
 		var flv = paystubConfig[year].flv;
-        output['flv_total'] = 0;
-		output['flv_ytd_total'] = 0;
-		if (isset(flv[state]) && !empty(flv[state])) {
-			formula = flv[state]['flag'][0];
+        flv_total = 0;
+		flv_ytd_total = 0;
+		if ( typeof flv[state] !=='undefined' &&  flv[state] !== "") {
+			var formula =  flv[state]['flag'][0];
 			switch (formula) {
 				case 1:
 					maxtax = flv[state]['maxtax'][0];
 					percent = flv[state]['percent'][0];
 					max = flv[state]['max'][0];
 					flv_tax = 0;
-					if (output['tytd'] < max) {
-						flv_tax = output['tytd'] * (percent / 100);
-						output['flv_total'] = cTotal * (percent / 100); //flv_tax/(month*term);
-					} else if (output['tytd'] >= max) {
+					if (tytd < max) {
+						flv_tax = tytd * (percent / 100);
+						flv_total = paymentTotal * (percent / 100); //flv_tax/(month*term);
+					} else if (tytd >= max) {
 						flv_tax = maxtax;
-						if (isset(pre_stub['flv_ytd_total'])) {
-							diff = flv_tax - number_format(this->converttofloat(pre_stub['flv_ytd_total']), 2, '.', '');
+						if (typeof pre_stub_flv_ytd_total  !== 'undefined' ) {
+							diff = flv_tax - REGEXPATTERN.number_format(REGEXPATTERN.converttofloat(pre_stub_flv_ytd_total));
 						} else {
 							diff = 0;
 						}
 						if (diff > 0) {
-							output['flv_total'] = diff;
+							flv_total = diff;
 						} else {
-							output['flv_total'] = 0;
+							flv_total = 0;
 						}
 
-					}
-					if (isset(pre_stub['flv_ytd_total'])) {
-						if (previ_payDate_year != current_payDate_year) {
-							output['flv_ytd_total'] = output['flv_total'];
-						}else{
-							if(pre_stub['flv_ytd_total'] >=maxtax){
-								output['flv_ytd_total']=maxtax;
-							}else{
-								output['flv_ytd_total'] = output['flv_total'] + this->converttofloat(pre_stub['flv_ytd_total']);
-							}
-						}
-					} else {
-						output['flv_ytd_total'] = number_format(flv_tax, 2, '.', '');
 					}
 					break;
 			}
 		}
-		output['flv_total'] = this->converttofloat(output['flv_total']);
-		output['flv_ytd_total'] = this->converttofloat(output['flv_ytd_total']);
+		flv_total = REGEXPATTERN.converttofloat(flv_total);
+		return flv_total;
     },
-    getFlvTaxYTD: async (year, maritalStatus, paymentTotal, paymentMode, exemp = null) => {
+    getFlvTaxYTD: async (year,state, paymentTotal, tytd ,previ_payDate_year,  current_payDate_year, flv_total, pre_stub_flv_ytd_total, ) => {
 		var flv = paystubConfig[year].flv;
-        output['flv_total'] = 0;
-		output['flv_ytd_total'] = 0;
-		if (isset(flv[state]) && !empty(flv[state])) {
-			formula = flv[state]['flag'][0];
+        var flv_total = 0;
+		var flv_ytd_total = 0;
+		if (typeof  flv[state] !== 'undefined' && flv[state] !== "") {
+			var formula =  flv[state]['flag'][0];
 			switch (formula) {
 				case 1:
 					maxtax = flv[state]['maxtax'][0];
 					percent = flv[state]['percent'][0];
 					max = flv[state]['max'][0];
 					flv_tax = 0;
-					if (output['tytd'] < max) {
-						flv_tax = output['tytd'] * (percent / 100);
-						output['flv_total'] = cTotal * (percent / 100); //flv_tax/(month*term);
-					} else if (output['tytd'] >= max) {
+					if (tytd < max) {
+						flv_tax = tytd * (percent / 100);
+						flv_total = paymentTotal * (percent / 100); //flv_tax/(month*term);
+					} else if (tytd >= max) {
 						flv_tax = maxtax;
-						if (isset(pre_stub['flv_ytd_total'])) {
-							diff = flv_tax - number_format(this->converttofloat(pre_stub['flv_ytd_total']), 2, '.', '');
+						if (typeof pre_stub_flv_ytd_total  !== 'undefined' ) {
+							diff = flv_tax - REGEXPATTERN.number_format(REGEXPATTERN.converttofloat(pre_stub_flv_ytd_total));
 						} else {
 							diff = 0;
 						}
 						if (diff > 0) {
-							output['flv_total'] = diff;
+							flv_total = diff;
 						} else {
-							output['flv_total'] = 0;
+							flv_total = 0;
 						}
 
 					}
-					if (isset(pre_stub['flv_ytd_total'])) {
+									
+					if (typeof pre_stub_flv_ytd_total  !== 'undefined' ) {
 						if (previ_payDate_year != current_payDate_year) {
-							output['flv_ytd_total'] = output['flv_total'];
+							flv_ytd_total = flv_total;
 						}else{
-							if(pre_stub['flv_ytd_total'] >=maxtax){
-								output['flv_ytd_total']=maxtax;
+							if(pre_stub_flv_ytd_total >=maxtax){
+								flv_ytd_total=maxtax;
 							}else{
-								output['flv_ytd_total'] = output['flv_total'] + this->converttofloat(pre_stub['flv_ytd_total']);
+								flv_ytd_total = flv_total + REGEXPATTERN.converttofloat(pre_stub_flv_ytd_total);
 							}
 						}
 					} else {
-						output['flv_ytd_total'] = number_format(flv_tax, 2, '.', '');
+						flv_ytd_total = REGEXPATTERN.number_format(flv_tax);
 					}
 					break;
 			}
 		}
-		output['flv_total'] = this->converttofloat(output['flv_total']);
-		output['flv_ytd_total'] = this->converttofloat(output['flv_ytd_total']);
+		flv_ytd_total = REGEXPATTERN.converttofloat(flv_ytd_total);
+		return flv_ytd_total;
     }
 };
