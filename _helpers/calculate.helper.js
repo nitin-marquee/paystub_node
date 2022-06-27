@@ -290,9 +290,9 @@ module.exports = {
 	var federalTax = 0;
 	if(typeof federal_tax !== 'undefined' && federal_tax !== '') {
 	federalTax = FEDERALTAXHELPER.getFederalTax(year, maritalStatus, paymentTotal, paymentMode, exemp);
-} else {
-	federalTax = FEDERALTAXHELPER.getFederalTaxByAnnual(year, maritalStatus, paymentTotal, paymentMode, exemp);
-}
+	} else {
+		federalTax = FEDERALTAXHELPER.getFederalTaxByAnnual(year, maritalStatus, paymentTotal, paymentMode, exemp);
+	}
 var federal_tax_ytd_total = FEDERALTAXHELPER.getFederalTaxYTD(federalTax, pre_stub_federal_tax_ytd_total, previ_payDate_year, current_payDate_year, month, term)
 
 
@@ -359,7 +359,7 @@ var sdi_ytd_total = SDITAXHELPER.getSdiTaxYTD(year, paymentTotal, paymentMode, f
 ////////////////////SUI SECURITY//////////////////////////////
 var sui_total = SUITAXHELPER.getSuiTax(year, paymentTotal, previ_payDate_year, current_payDate_year);
 var sui_ytd_total = SUITAXHELPER.getSuiTaxYTD(year, paymentTotal, previ_payDate_year, current_payDate_year, sui_total, pre_stub_sui_ytd_total);
-
+ 
 ////////////////////SUI SECURITY//////////////////////////////
 /////////////////////////////////////////////////////////////////
 
@@ -375,8 +375,8 @@ var flv_ytd_total = FLVTAXHELPER.getFlvTaxYTD(year, state, paymentTotal, tytd, p
 /////////////////////////////////////////////////////////////////
 ////////////////////WC SECURITY/////////////////////////////////
 
-var wc_total = WCTAXHELPER. ;
-var wc_ytd_total = WCTAXHELPER. ;
+// var wc_total = WCTAXHELPER. ;
+// var wc_ytd_total = WCTAXHELPER. ;
 
 
 ////////////////////WC SECURITY//////////////////////////////////
@@ -384,8 +384,8 @@ var wc_ytd_total = WCTAXHELPER. ;
 /////////////////////////////////////////////////////////////////
 ////////////////////WF SECURITY//////////////////////////////
 
-var wf_total = WFTAXHELPER. ;
-var wf_ytd_total = WFTAXHELPER. ;
+// var wf_total = WFTAXHELPER. ;
+// var wf_ytd_total = WFTAXHELPER. ;
 
 ////////////////////WF SECURITY//////////////////////////////
 /////////////////////////////////////////////////////////////
