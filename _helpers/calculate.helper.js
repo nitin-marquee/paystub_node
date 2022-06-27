@@ -12,7 +12,8 @@ const REGEXPATTERN = require('../utils/regexPattern');
 
 module.exports = {
 
-	calculate: async (req, pre_stub, total_hours = 0, i_index) => {
+	calculate: async (req, pre_stub, total_hours = 0, i_index) => 
+	{
 		var payload = req.body;
 		// paymentTotal, paymentMode
 
@@ -51,7 +52,7 @@ module.exports = {
 
 		var diffDate = date_diff(date_create(pay_period_end), date_create(pay_period_start));
 
-		var diffDay = diffDate -> format('%a');
+		// var diffDay = diffDate -> format('%a');
 
 		//print_r(diffDay);
 		var previ_payDate_year = new Date("Y",Date.parse("-",(diffDay+1)," days",Date.parse(pay_date)));
@@ -179,7 +180,7 @@ module.exports = {
 					output['ytd7'] = current7;
 					output['ytd8'] = current8;
 					for (k = 1; k <= custome_earnings_count; k++) {
-						output['custome_earnings_ytd'.k.'']=payload.custome_earnings_current'.k.''];
+						output['custome_earnings_ytd'[k]]=payload.custome_earnings_current[k];
 					}
 				}
 				else {
@@ -193,7 +194,7 @@ module.exports = {
 					output['ytd7'] = current7 + REGEXPATTERN.converttofloat(pre_stub['ytd7']);
 					output['ytd8'] = current8 + REGEXPATTERN.converttofloat(pre_stub['ytd8']);
 					for (k = 1; k <= custome_earnings_count; k++) {
-						output['custome_earnings_ytd'.k.'']=payload.custome_earnings_current[k] + REGEXPATTERN.converttofloat(pre_stub['custome_earnings_ytd'.k.'']);
+						output['custome_earnings_ytd'[k]]=payload.custome_earnings_current[k] + REGEXPATTERN.converttofloat(pre_stub['custome_earnings_ytd'[k]]);
 					}
 				}
 			} else {
@@ -208,33 +209,37 @@ module.exports = {
 				output['ytd7'] = REGEXPATTERN.number_format(current7 * month * tdiff, 2, '.', '');
 				output['ytd8'] = REGEXPATTERN.number_format(current8 * month * tdiff, 2, '.', '');
 				for (k = 1; k <= custome_earnings_count; k++) {
-					output['custome_earnings_ytd'.k.'']=REGEXPATTERN.number_format(payload.custome_earnings_current[k] * month * tdiff, 2, '.', '');
+					output['custome_earnings_ytd'[k]]=REGEXPATTERN.number_format(payload.custome_earnings_current[k] * month * tdiff, 2, '.', '');
 				}
 			}
 
 			totalCustomeDeduction = 0;
 
 			for (k = 1; k <= custome_deduction_count; k++) {
-				if (isset(pre_stub['custome_deduction_ytd_total'.k.''])) {
+				if (isset(pre_stub['custome_deduction_ytd_total'[k]])) {
 					if (previ_payDate_year != current_payDate_year) {
-						output['custome_deduction_ytd_total'.k.''] = payload.custome_deduction_total'.k.''];
+						output['custome_deduction_ytd_total'[k]] = payload.custome_deduction_total[k];
 					} else {
-						if (a == 0) {//(payload.custome_deduction_total'.k.'') !=0
-							// output['custome_deduction_ytd_total'.k.''] = payload.custome_deduction_total'.k.''] + REGEXPATTERN.converttofloat(pre_stub['custome_deduction_ytd_total'.k.'']);
+						if (a == 0) {//(payload.custome_deduction_total'[k]) !=0
+							// output['custome_deduction_ytd_total'[k]] = payload.custome_deduction_total'[k]] + REGEXPATTERN.converttofloat(pre_stub['custome_deduction_ytd_total'[k]]);
 						} else {
-							// output['custome_deduction_ytd_total'.k.'']=payload.custome_deduction_total'.k.''];
+							// output['custome_deduction_ytd_total'[k]]=payload.custome_deduction_total'[k]];
 						}
 					}
-			  else {
-					// output['custome_deduction_ytd_total'.k.'']=REGEXPATTERN.number_format(REGEXPATTERN.converttofloat(payload.custome_deduction_total'.k.'']*tdiff), 2, '.', '');
 				}
-				totalCustomeDeduction = REGEXPATTERN.number_format(REGEXPATTERN.converttofloat((float)str_replace(",", "", totalCustomeDeduction) + (float)str_replace(",", "", payload.custome_deduction_total'.k.''])), 2, '.', '');
-				totalYtdCustomeDeduction = REGEXPATTERN.number_format(REGEXPATTERN.converttofloat((float)str_replace(",", "", totalYtdCustomeDeduction) + (float)str_replace(",", "", output['custome_deduction_ytd_total'.k.''])), 2, '.', '');
+			else {
+					// output['custome_deduction_ytd_total'[k]]=REGEXPATTERN.number_format(REGEXPATTERN.converttofloat(payload.custome_deduction_total'[k]]*tdiff), 2, '.', '');
+				}
+				totalCustomeDeduction= REGEXPATTERN.number_format(REGEXPATTERN.converttofloat((float)(totalCustomeDeduction.replace(",", ""))+(float)(custome_deduction_total[k] .replace(",", ""))), 2, '.', '');
+				totalYtdCustomeDeduction= REGEXPATTERN.number_format(REGEXPATTERN.converttofloat((float)(totalYtdCustomeDeduction.replace(",", ""))+(float)(output['custome_deduction_ytd_total'[k]].replace(",", ""))), 2, '.', '');
+	
+				// totalCustomeDeduction = REGEXPATTERN.number_format(REGEXPATTERN.converttofloat((float)str_replace(",", "", totalCustomeDeduction) + (float)str_replace(",", "", payload.custome_deduction_total[k])), 2, '.', '');
+				// totalYtdCustomeDeduction = REGEXPATTERN.number_format(REGEXPATTERN.converttofloat((float)str_replace(",", "", totalYtdCustomeDeduction) + (float)str_replace(",", "", output['custome_deduction_ytd_total'[k]])), 2, '.', '');
 			}
 
 			output['deductions'] = REGEXPATTERN.number_format(REGEXPATTERN.converttofloat(totalCustomeDeduction), 2, '.', '');
 			output['net_pay'] = REGEXPATTERN.converttofloat(paymentTotal - bcdiv(REGEXPATTERN.converttofloat(output['deductions']), 1, 2));
-			output['ytd_deductions'] = REGEXPATTERN.number_format(REGEXPATTERN.converttofloat((float)str_replace(",", "", totalYtdCustomeDeduction)), 2, '.', '');
+			output['ytd_deductions'] = REGEXPATTERN.number_format(REGEXPATTERN.converttofloat((float)(totalYtdCustomeDeduction.replace(",", ""))), 2, '.', '');
 			output['ytd_net_pay'] = REGEXPATTERN.converttofloat(output['tytd'] - bcdiv(output['ytd_deductions'], 1, 2));
 
 			return output;
@@ -252,7 +257,7 @@ module.exports = {
 				output['ytd6'] = current6;
 				output['ytd7'] = current7;
 				for (k = 1; k <= custome_earnings_count; k++) {
-					// output['custome_earnings_ytd'.k.'']=payload.custome_earnings_current'.k.''];
+					// output['custome_earnings_ytd'[k]]=payload.custome_earnings_current'[k]];
 				}
 			}
 			else {
@@ -265,7 +270,7 @@ module.exports = {
 				output['ytd6'] = current6 + REGEXPATTERN.converttofloat(pre_stub['ytd6']);
 				output['ytd7'] = current7 + REGEXPATTERN.converttofloat(pre_stub['ytd7']);
 				for (k = 1; k <= custome_earnings_count; k++) {
-					// output['custome_earnings_ytd'.k.'']=REGEXPATTERN.number_format(REGEXPATTERN.converttofloat(payload.custome_earnings_current'.k.''])+REGEXPATTERN.converttofloat(pre_stub['custome_earnings_ytd'.k.'']), 2, '.', '');
+					// output['custome_earnings_ytd'[k]]=REGEXPATTERN.number_format(REGEXPATTERN.converttofloat(payload.custome_earnings_current'[k])+REGEXPATTERN.converttofloat(pre_stub['custome_earnings_ytd'[k]]), 2, '.', '');
 				}
 			}
 		}
@@ -279,140 +284,140 @@ module.exports = {
 			output['ytd6'] = REGEXPATTERN.number_format(current6 * month * tdiff, 2, '.', '');
 			output['ytd7'] = REGEXPATTERN.number_format(current7 * month * tdiff, 2, '.', '');
 			for (k = 1; k <= custome_earnings_count; k++) {
-				// output['custome_earnings_ytd'.k.'']=REGEXPATTERN.number_format(REGEXPATTERN.converttofloat(payload.custome_earnings_current'.k.''])*month*tdiff, 2, '.', '');
+				// output['custome_earnings_ytd'[k]]=REGEXPATTERN.number_format(REGEXPATTERN.converttofloat(payload.custome_earnings_current'[k]])*month*tdiff, 2, '.', '');
 			}
 		}
-	}
+			
 
-        ////////////////////Federal Tax//////////////////////////////////
-        /////////////////////////////////////////////////////////////////
-        var federal_tax = paystubConfig[year].federal_tax;
-	var federalTax = 0;
-	if(typeof federal_tax !== 'undefined' && federal_tax !== '') {
-	federalTax = FEDERALTAXHELPER.getFederalTax(year, maritalStatus, paymentTotal, paymentMode, exemp);
-	} else {
-		federalTax = FEDERALTAXHELPER.getFederalTaxByAnnual(year, maritalStatus, paymentTotal, paymentMode, exemp);
-	}
-var federal_tax_ytd_total = FEDERALTAXHELPER.getFederalTaxYTD(federalTax, pre_stub_federal_tax_ytd_total, previ_payDate_year, current_payDate_year, month, term)
-
-
-////////////////////Federal Tax//////////////////////////////////
-/////////////////////////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////////
-////////////////////stateTax/////////////////////////////////////
-
-var state_tax_total = STATETAXHELPER.getStateTax(year, maritalStatus, paymentTotal, paymentMode, state);
-var state_tax_ytd_total = STATETAXHELPER.getStateTaxYTD(state_tax_total, pre_stub_state_tax_ytd_total, previ_payDate_year, current_payDate_year, month, tdiff);
-
-////////////////////stateTax/////////////////////////////////////
-/////////////////////////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////////
-////////////////////MEDICARE/////////////////////////////////////
-var fica_medicare_total = MEDITAXHELPER.getMedicareTax(year, paymentTotal, paymentMode);
-
-var fica_medicare_ytd_total = MEDITAXHELPER.getMedicareTaxYTD(year, paymentTotal, paymentMode, fica_medicare_total, pre_stub_fica_medicare_ytd_total, previ_payDate_year, current_payDate_year, month, tdiff);
-//fica_medicare_total = REGEXPATTERN.number_format(round(fica_medicare_total * 100) / 100);
-// if (pre_stub_fica_medicare_ytd_total) {
-// 	if (previ_payDate_year != current_payDate_year) {
-// 		fica_medicare_ytd_total = fica_medicare_total;
-// 	}else{
-// 		if(mTaxRate !=0){
-// 			var fica_medicare_ytd_total =Math.round((fica_medicare_total + pre_stub_fica_medicare_ytd_total)*100)/100;
-// 		}else{
-// 			var fica_medicare_ytd_total = fica_medicare_total;
-// 		}
-// 	}
-// } else {
-// 	fica_medicare_ytd_total = Math.round(fica_medicare_total* month * tdiff*100)/100;
-// }
-
-////////////////////MEDICARE/////////////////////////////////////
-/////////////////////////////////////////////////////////////////
+		////////////////////Federal Tax//////////////////////////////////
+		/////////////////////////////////////////////////////////////////
+		var federal_tax = paystubConfig[year].federal_tax;
+		var federalTax = 0;
+		if(typeof federal_tax !== 'undefined' && federal_tax !== '') {
+		federalTax = FEDERALTAXHELPER.getFederalTax(year, maritalStatus, paymentTotal, paymentMode, exemp);
+		} else {
+			federalTax = FEDERALTAXHELPER.getFederalTaxByAnnual(year, maritalStatus, paymentTotal, paymentMode, exemp);
+		}
+		var federal_tax_ytd_total = FEDERALTAXHELPER.getFederalTaxYTD(federalTax, pre_stub_federal_tax_ytd_total, previ_payDate_year, current_payDate_year, month, term)
 
 
-/////////////////////////////////////////////////////////////////
-////////////////////SCOAIL SECURITY//////////////////////////////
+		////////////////////Federal Tax//////////////////////////////////
+		/////////////////////////////////////////////////////////////////
 
-var social_total = SOCIALTAXHELPER.getMedicareTax(year, paymentTotal, paymentMode);
+		/////////////////////////////////////////////////////////////////
+		////////////////////stateTax/////////////////////////////////////
 
-var social_ytd_total = SOCIALTAXHELPER.getMedicareTaxYTD(year, paymentTotal, paymentMode, fica_medicare_total, pre_stub_fica_medicare_ytd_total, previ_payDate_year, current_payDate_year, month, tdiff);
+		var state_tax_total = STATETAXHELPER.getStateTax(year, maritalStatus, paymentTotal, paymentMode, state);
+		var state_tax_ytd_total = STATETAXHELPER.getStateTaxYTD(state_tax_total, pre_stub_state_tax_ytd_total, previ_payDate_year, current_payDate_year, month, tdiff);
 
+		////////////////////stateTax/////////////////////////////////////
+		/////////////////////////////////////////////////////////////////
 
+		/////////////////////////////////////////////////////////////////
+		////////////////////MEDICARE/////////////////////////////////////
+		var fica_medicare_total = MEDITAXHELPER.getMedicareTax(year, paymentTotal, paymentMode);
 
-////////////////////SCOAIL SECURITY//////////////////////////////
-/////////////////////////////////////////////////////////////////
+		var fica_medicare_ytd_total = MEDITAXHELPER.getMedicareTaxYTD(year, paymentTotal, paymentMode, fica_medicare_total, pre_stub_fica_medicare_ytd_total, previ_payDate_year, current_payDate_year, month, tdiff);
+		//fica_medicare_total = REGEXPATTERN.number_format(round(fica_medicare_total * 100) / 100);
+		// if (pre_stub_fica_medicare_ytd_total) {
+		// 	if (previ_payDate_year != current_payDate_year) {
+		// 		fica_medicare_ytd_total = fica_medicare_total;
+		// 	}else{
+		// 		if(mTaxRate !=0){
+		// 			var fica_medicare_ytd_total =Math.round((fica_medicare_total + pre_stub_fica_medicare_ytd_total)*100)/100;
+		// 		}else{
+		// 			var fica_medicare_ytd_total = fica_medicare_total;
+		// 		}
+		// 	}
+		// } else {
+		// 	fica_medicare_ytd_total = Math.round(fica_medicare_total* month * tdiff*100)/100;
+		// }
 
-/////////////////////////////////////////////////////////////////
-////////////////////SDI SECURITY//////////////////////////////
-
-var sdi_total = SDITAXHELPER.getSdiTax(year, paymentTotal, paymentMode);
-
-var sdi_ytd_total = SDITAXHELPER.getSdiTaxYTD(year, paymentTotal, paymentMode, fica_medicare_total, pre_stub_fica_medicare_ytd_total, previ_payDate_year, current_payDate_year, month, tdiff);
-
-
-////////////////////SDI SECURITY//////////////////////////////
-/////////////////////////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////////
-////////////////////SUI SECURITY//////////////////////////////
-var sui_total = SUITAXHELPER.getSuiTax(year, paymentTotal, previ_payDate_year, current_payDate_year);
-var sui_ytd_total = SUITAXHELPER.getSuiTaxYTD(year, paymentTotal, previ_payDate_year, current_payDate_year, sui_total, pre_stub_sui_ytd_total);
- 
-////////////////////SUI SECURITY//////////////////////////////
-/////////////////////////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////////
-////////////////////flv SECURITY////////////////////////////// 
-var flv_total = FLVTAXHELPER.getFlvTax(year, state, paymentTotal, pre_stub_flv_ytd_total, tytd);
-var flv_ytd_total = FLVTAXHELPER.getFlvTaxYTD(year, state, paymentTotal, tytd, previ_payDate_year, current_payDate_year, flv_total, pre_stub_flv_ytd_total,);
-
-
-////////////////////SUI SECURITY/////////////////////////////////
-/////////////////////////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////////
-////////////////////WC SECURITY/////////////////////////////////
-
-// var wc_total = WCTAXHELPER. ;
-// var wc_ytd_total = WCTAXHELPER. ;
+		////////////////////MEDICARE/////////////////////////////////////
+		/////////////////////////////////////////////////////////////////
 
 
-////////////////////WC SECURITY//////////////////////////////////
-/////////////////////////////////////////////////////////////////
-/////////////////////////////////////////////////////////////////
-////////////////////WF SECURITY//////////////////////////////
+		/////////////////////////////////////////////////////////////////
+		////////////////////SCOAIL SECURITY//////////////////////////////
 
-// var wf_total = WFTAXHELPER. ;
-// var wf_ytd_total = WFTAXHELPER. ;
+		var social_total = SOCIALTAXHELPER.getMedicareTax(year, paymentTotal, paymentMode);
 
-////////////////////WF SECURITY//////////////////////////////
-/////////////////////////////////////////////////////////////
+		var social_ytd_total = SOCIALTAXHELPER.getMedicareTaxYTD(year, paymentTotal, paymentMode, fica_medicare_total, pre_stub_fica_medicare_ytd_total, previ_payDate_year, current_payDate_year, month, tdiff);
 
-/////////////////////////////////////////////////////////
-////////////////////Cutome deduction ////////////////////
 
-var totalCustomeDeduction = 0;
-var totalYtdCustomeDeduction = 0;
 
-for (k = 1; k <= custome_deduction_count; k++) {
-	// if (typeof pre_stub['custome_deduction_ytd_total'.k.'']  !== 'undefined') {
-	// 	if (previ_payDate_year != current_payDate_year) {
-	// 		output['custome_deduction_ytd_total'.k.''] = payload.custome_deduction_total'.k.''];
-	// 	}else{
-	// 		if(payload.custome_deduction_total'.k.''] !=0){
-	// 			output['custome_deduction_ytd_total'.k.''] = payload.custome_deduction_total'.k.''] + REGEXPATTERN.converttofloat(pre_stub['custome_deduction_ytd_total'.k.'']);
-	// 		}else{
-	// 			output['custome_deduction_ytd_total'.k.'']=payload.custome_deduction_total'.k.''];
-	// 		}
-	// 	}
-	// } else {
-	// 	output['custome_deduction_ytd_total'.k.'']=REGEXPATTERN.number_format(REGEXPATTERN.converttofloat(payload.custome_deduction_total'.k.'']*tdiff));
-	// }
-	// totalCustomeDeduction=REGEXPATTERN.number_format(REGEXPATTERN.converttofloat((float)str_replace(",", "", totalCustomeDeduction)+(float)str_replace(",", "", payload.custome_deduction_total'.k.''])));
-	// totalYtdCustomeDeduction=REGEXPATTERN.number_format(REGEXPATTERN.converttofloat((float)str_replace(",", "", totalYtdCustomeDeduction)+(float)str_replace(",", "", output['custome_deduction_ytd_total'.k.''])));
-}
+		////////////////////SCOAIL SECURITY//////////////////////////////
+		/////////////////////////////////////////////////////////////////
+
+		/////////////////////////////////////////////////////////////////
+		////////////////////SDI SECURITY//////////////////////////////
+
+		var sdi_total = SDITAXHELPER.getSdiTax(year, paymentTotal, paymentMode);
+
+		var sdi_ytd_total = SDITAXHELPER.getSdiTaxYTD(year, paymentTotal, paymentMode, fica_medicare_total, pre_stub_fica_medicare_ytd_total, previ_payDate_year, current_payDate_year, month, tdiff);
+
+
+		////////////////////SDI SECURITY//////////////////////////////
+		/////////////////////////////////////////////////////////////////
+
+		/////////////////////////////////////////////////////////////////
+		////////////////////SUI SECURITY//////////////////////////////
+		var sui_total = SUITAXHELPER.getSuiTax(year, paymentTotal, previ_payDate_year, current_payDate_year);
+		var sui_ytd_total = SUITAXHELPER.getSuiTaxYTD(year, paymentTotal, previ_payDate_year, current_payDate_year, sui_total, pre_stub_sui_ytd_total);
+		
+		////////////////////SUI SECURITY//////////////////////////////
+		/////////////////////////////////////////////////////////////////
+
+		/////////////////////////////////////////////////////////////////
+		////////////////////flv SECURITY////////////////////////////// 
+		var flv_total = FLVTAXHELPER.getFlvTax(year, state, paymentTotal, pre_stub_flv_ytd_total, tytd);
+		var flv_ytd_total = FLVTAXHELPER.getFlvTaxYTD(year, state, paymentTotal, tytd, previ_payDate_year, current_payDate_year, flv_total, pre_stub_flv_ytd_total,);
+
+
+		////////////////////SUI SECURITY/////////////////////////////////
+		/////////////////////////////////////////////////////////////////
+
+		/////////////////////////////////////////////////////////////////
+		////////////////////WC SECURITY/////////////////////////////////
+
+		// var wc_total = WCTAXHELPER. ;
+		// var wc_ytd_total = WCTAXHELPER. ;
+
+
+		////////////////////WC SECURITY//////////////////////////////////
+		/////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////
+		////////////////////WF SECURITY//////////////////////////////
+
+		// var wf_total = WFTAXHELPER. ;
+		// var wf_ytd_total = WFTAXHELPER. ;
+
+		////////////////////WF SECURITY//////////////////////////////
+		/////////////////////////////////////////////////////////////
+
+		/////////////////////////////////////////////////////////
+		////////////////////Cutome deduction ////////////////////
+
+		var totalCustomeDeduction = 0;
+		var totalYtdCustomeDeduction = 0;
+
+		for (k = 1; k <= custome_deduction_count; k++) {
+			// if (typeof pre_stub['custome_deduction_ytd_total'.k.'']  !== 'undefined') {
+			// 	if (previ_payDate_year != current_payDate_year) {
+			// 		output['custome_deduction_ytd_total'.k.''] = payload.custome_deduction_total'.k.''];
+			// 	}else{
+			// 		if(payload.custome_deduction_total'.k.''] !=0){
+			// 			output['custome_deduction_ytd_total'.k.''] = payload.custome_deduction_total'.k.''] + REGEXPATTERN.converttofloat(pre_stub['custome_deduction_ytd_total'.k.'']);
+			// 		}else{
+			// 			output['custome_deduction_ytd_total'.k.'']=payload.custome_deduction_total'.k.''];
+			// 		}
+			// 	}
+			// } else {
+			// 	output['custome_deduction_ytd_total'.k.'']=REGEXPATTERN.number_format(REGEXPATTERN.converttofloat(payload.custome_deduction_total'.k.'']*tdiff));
+			// }
+			// totalCustomeDeduction=REGEXPATTERN.number_format(REGEXPATTERN.converttofloat((float)str_replace(",", "", totalCustomeDeduction)+(float)str_replace(",", "", payload.custome_deduction_total'.k.''])));
+			// totalYtdCustomeDeduction=REGEXPATTERN.number_format(REGEXPATTERN.converttofloat((float)str_replace(",", "", totalYtdCustomeDeduction)+(float)str_replace(",", "", output['custome_deduction_ytd_total'.k.''])));
+		}
 
 
 
