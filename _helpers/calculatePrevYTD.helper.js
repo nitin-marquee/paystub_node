@@ -55,9 +55,10 @@ module.exports = {
 		var pay_period_end = payload.pay_period_end;
 		var output = array();
 		var duration = '';
-		var month = date("m", strtotime(pay_date));
-		var year = date("Y", strtotime(pay_date));
-		var day = date("d", strtotime(pay_date));
+
+		var month =new Date(pay_date).getMonth()+1; //  date("m", strtotime(pay_date)); 
+		var year = new Date(pay_date).getYear(); //date("Y", strtotime(pay_date)); 
+		var day = new Date(pay_date).getDate(); //date("d", strtotime(pay_date)); 
 		var term = 0;
 
        
@@ -68,7 +69,7 @@ module.exports = {
     
         // var diffDay=diffDate->format('%a');
     
-        var previ_payDate_year = date("Y",Date.parse("-",(diffDay+1)," days",Date.parse(pay_date)));
+        var previ_payDate_year = new Date("Y",Date.parse("-",(diffDay+1)," days",Date.parse(pay_date)));
     
         $output['pay_period_end'] = str_replace("/", "/", $pay_period_end);
         $output['pay_date'] = pay_date;
@@ -168,18 +169,18 @@ module.exports = {
     
         }
     
-        $tdiff = 1;
-        $indexn = $i_index+1;
-        if($empYTD!=''){
-            if($indexn == $empYTD){
-                $tdiff=0;
-            }else if($empYTD > $term){
-                $tdiff = $term - 1;
+        var tdiff = 1;
+        var indexn = i_index+1;
+        if(empYTD!=''){
+            if(indexn == empYTD){
+                tdiff=0;
+            }else if(empYTD > term){
+                tdiff = term - 1;
             }else{
-                $tdiff = $empYTD - $indexn;
+                tdiff = empYTD - indexn;
             }
         } else {
-            $tdiff = $term - 1;
+            tdiff = term - 1;
         }
     
         /////////////////////////////////////////////////////////////////

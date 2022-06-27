@@ -42,9 +42,9 @@ module.exports = {
 		var pay_period_end = payload.pay_period_end;
 		var output = array();
 		var duration = '';
-		var month = date("m", strtotime(pay_date));
-		var year = date("Y", strtotime(pay_date));
-		var day = date("d", strtotime(pay_date));
+		var month =new Date(pay_date).getMonth()+1; //  date("m", strtotime(pay_date)); 
+		var year = new Date(pay_date).getYear(); //date("Y", strtotime(pay_date)); 
+		var day = new Date(pay_date).getDate(); //date("d", strtotime(pay_date)); 
 		var term = 0;
 
 		var current_payDate_year = year;
@@ -54,17 +54,17 @@ module.exports = {
 		var diffDay = diffDate -> format('%a');
 
 		//print_r(diffDay);
-		var previ_payDate_year = date("Y", strtotime("-".(diffDay + 1)." days", strtotime(pay_date)));
+		var previ_payDate_year = new Date("Y",Date.parse("-",(diffDay+1)," days",Date.parse(pay_date)));
 
-		var output['pay_period_end'] = str_replace("/", "/", pay_period_end);
-		var output['pay_date'] = pay_date;
+		output['pay_period_end'] = str_replace("/", "/", pay_period_end);
+		utput['pay_date'] = pay_date;
 
 		var ddate = date("Y-m-d", strtotime(pay_date));
 		var date = new DateTime(ddate);
 
 		// Calculate working days of ther year
 		var endDate = strtotime(ddate);
-		var startDate = strtotime(year."-01-01");
+		var startDate = Date.parse(year,"-01-01");
 		var days = (endDate - startDate) / 86400 + 1;
 		var no_full_weeks = floor(days / 7);
 		var no_remaining_days = fmod(days, 7);
