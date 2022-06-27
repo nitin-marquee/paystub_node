@@ -12,8 +12,7 @@ const REGEXPATTERN = require('../utils/regexPattern');
 
 module.exports = {
 
-	calculate: async (req, pre_stub, total_hours = 0, i_index) => 
-	{
+	calculate: async (req, pre_stub, total_hours = 0, i_index) => {
 		var payload = req.body;
 		// paymentTotal, paymentMode
 
@@ -43,7 +42,7 @@ module.exports = {
 		var pay_period_end = payload.pay_period_end;
 		var output = array();
 		var duration = '';
-		var month =new Date(pay_date).getMonth()+1; //  date("m", strtotime(pay_date)); 
+		var month = new Date(pay_date).getMonth() + 1; //  date("m", strtotime(pay_date)); 
 		var year = new Date(pay_date).getYear(); //date("Y", strtotime(pay_date)); 
 		var day = new Date(pay_date).getDate(); //date("d", strtotime(pay_date)); 
 		var term = 0;
@@ -55,7 +54,7 @@ module.exports = {
 		// var diffDay = diffDate -> format('%a');
 
 		//print_r(diffDay);
-		var previ_payDate_year = new Date("Y",Date.parse("-",(diffDay+1)," days",Date.parse(pay_date)));
+		var previ_payDate_year = new Date("Y", Date.parse("-", (diffDay + 1), " days", Date.parse(pay_date)));
 
 		output['pay_period_end'] = str_replace("/", "/", pay_period_end);
 		utput['pay_date'] = pay_date;
@@ -65,7 +64,7 @@ module.exports = {
 
 		// Calculate working days of ther year
 		var endDate = strtotime(ddate);
-		var startDate = Date.parse(year,"-01-01");
+		var startDate = Date.parse(year, "-01-01");
 		var days = (endDate - startDate) / 86400 + 1;
 		var no_full_weeks = floor(days / 7);
 		var no_remaining_days = fmod(days, 7);
@@ -180,7 +179,7 @@ module.exports = {
 					output['ytd7'] = current7;
 					output['ytd8'] = current8;
 					for (k = 1; k <= custome_earnings_count; k++) {
-						output['custome_earnings_ytd'[k]]=payload.custome_earnings_current[k];
+						output['custome_earnings_ytd'[k]] = payload.custome_earnings_current[k];
 					}
 				}
 				else {
@@ -194,7 +193,7 @@ module.exports = {
 					output['ytd7'] = current7 + REGEXPATTERN.converttofloat(pre_stub['ytd7']);
 					output['ytd8'] = current8 + REGEXPATTERN.converttofloat(pre_stub['ytd8']);
 					for (k = 1; k <= custome_earnings_count; k++) {
-						output['custome_earnings_ytd'[k]]=payload.custome_earnings_current[k] + REGEXPATTERN.converttofloat(pre_stub['custome_earnings_ytd'[k]]);
+						output['custome_earnings_ytd'[k]] = payload.custome_earnings_current[k] + REGEXPATTERN.converttofloat(pre_stub['custome_earnings_ytd'[k]]);
 					}
 				}
 			} else {
@@ -209,7 +208,7 @@ module.exports = {
 				output['ytd7'] = REGEXPATTERN.number_format(current7 * month * tdiff, 2, '.', '');
 				output['ytd8'] = REGEXPATTERN.number_format(current8 * month * tdiff, 2, '.', '');
 				for (k = 1; k <= custome_earnings_count; k++) {
-					output['custome_earnings_ytd'[k]]=REGEXPATTERN.number_format(payload.custome_earnings_current[k] * month * tdiff, 2, '.', '');
+					output['custome_earnings_ytd'[k]] = REGEXPATTERN.number_format(payload.custome_earnings_current[k] * month * tdiff, 2, '.', '');
 				}
 			}
 
@@ -227,12 +226,12 @@ module.exports = {
 						}
 					}
 				}
-			else {
+				else {
 					// output['custome_deduction_ytd_total'[k]]=REGEXPATTERN.number_format(REGEXPATTERN.converttofloat(payload.custome_deduction_total'[k]]*tdiff), 2, '.', '');
 				}
-				totalCustomeDeduction= REGEXPATTERN.number_format(REGEXPATTERN.converttofloat((float)(totalCustomeDeduction.replace(",", ""))+(float)(custome_deduction_total[k] .replace(",", ""))), 2, '.', '');
-				totalYtdCustomeDeduction= REGEXPATTERN.number_format(REGEXPATTERN.converttofloat((float)(totalYtdCustomeDeduction.replace(",", ""))+(float)(output['custome_deduction_ytd_total'[k]].replace(",", ""))), 2, '.', '');
-	
+				totalCustomeDeduction = REGEXPATTERN.number_format(REGEXPATTERN.converttofloat((float)(totalCustomeDeduction.replace(",", "")) + (float)(custome_deduction_total[k].replace(",", ""))), 2, '.', '');
+				totalYtdCustomeDeduction = REGEXPATTERN.number_format(REGEXPATTERN.converttofloat((float)(totalYtdCustomeDeduction.replace(",", "")) + (float)(output['custome_deduction_ytd_total'[k]].replace(",", ""))), 2, '.', '');
+
 				// totalCustomeDeduction = REGEXPATTERN.number_format(REGEXPATTERN.converttofloat((float)str_replace(",", "", totalCustomeDeduction) + (float)str_replace(",", "", payload.custome_deduction_total[k])), 2, '.', '');
 				// totalYtdCustomeDeduction = REGEXPATTERN.number_format(REGEXPATTERN.converttofloat((float)str_replace(",", "", totalYtdCustomeDeduction) + (float)str_replace(",", "", output['custome_deduction_ytd_total'[k]])), 2, '.', '');
 			}
@@ -287,14 +286,14 @@ module.exports = {
 				// output['custome_earnings_ytd'[k]]=REGEXPATTERN.number_format(REGEXPATTERN.converttofloat(payload.custome_earnings_current'[k]])*month*tdiff, 2, '.', '');
 			}
 		}
-			
+
 
 		////////////////////Federal Tax//////////////////////////////////
 		/////////////////////////////////////////////////////////////////
 		var federal_tax = paystubConfig[year].federal_tax;
 		var federalTax = 0;
-		if(typeof federal_tax !== 'undefined' && federal_tax !== '') {
-		federalTax = FEDERALTAXHELPER.getFederalTax(year, maritalStatus, paymentTotal, paymentMode, exemp);
+		if (typeof federal_tax !== 'undefined' && federal_tax !== '') {
+			federalTax = FEDERALTAXHELPER.getFederalTax(year, maritalStatus, paymentTotal, paymentMode, exemp);
 		} else {
 			federalTax = FEDERALTAXHELPER.getFederalTaxByAnnual(year, maritalStatus, paymentTotal, paymentMode, exemp);
 		}
@@ -364,7 +363,7 @@ module.exports = {
 		////////////////////SUI SECURITY//////////////////////////////
 		var sui_total = SUITAXHELPER.getSuiTax(year, paymentTotal, previ_payDate_year, current_payDate_year);
 		var sui_ytd_total = SUITAXHELPER.getSuiTaxYTD(year, paymentTotal, previ_payDate_year, current_payDate_year, sui_total, pre_stub_sui_ytd_total);
-		
+
 		////////////////////SUI SECURITY//////////////////////////////
 		/////////////////////////////////////////////////////////////////
 
@@ -424,5 +423,5 @@ module.exports = {
 		////////////////////Cutome deduction ////////////////////
 		/////////////////////////////////////////////////////////
 
-    }
+	}
 };
