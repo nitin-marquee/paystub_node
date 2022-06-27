@@ -116,40 +116,40 @@ module.exports = {
             case 52:
                 duration = 'weekly';
                 month = 1;
-                days = date -> format("z") + 1;
+                // days = date -> format("z") + 1;
                 term = ceil(days / 7);
                 term = term == 53 ? 52 : term;
                 break;
             case 26:
                 duration = 'biweekly';
                 month = 1;
-                days = date -> format("z") + 1;
+                // days = date -> format("z") + 1;
                 term = ceil(days / 14);
                 term = term == 27 ? 26 : term;
                 break;
             case 12:
                 duration = 'monthly';
                 month = 1;
-                term = date -> format("m");
+                // term = date -> format("m");
                 term = term == 13 ? 12 : term;
                 break;
             case 24:
                 duration = 'semimonthly';
                 month = 1;
-                days = date -> format("z") + 1;
+                // days = date -> format("z") + 1;
                 term = ceil(days / 15);
                 term = term == 25 ? 24 : term;
                 break;
             case 4:
                 duration = 'quarterly';
                 month = 1;
-                months = date -> format("m");
+                // months = date -> format("m");
                 term = ceil(months / 3);
                 break;
             case 2:
                 duration = 'semiannual';
                 month = 1;
-                months = date -> format("m");
+                // months = date -> format("m");
                 term = ceil(months / 6);
                 break;
             case 1:
