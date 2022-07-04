@@ -2,13 +2,13 @@ global.paystubConfig = {};
 
 require('../constants/paystubConfig');
 
-var year = "2022";
-var exemp = 0;
-var state = "GA";
+// var year = "2022";
+// var exemp = 0;
+// var state = "GA";
 // var annual = paystubConfig[year].annual;
 // // console.log(JSON.stringify(annual));
 // // JSON.stringify
- var maritalStatus = "single";
+//  var maritalStatus = "single";
 // var federalDuration = 'annual';
 // var annual = paystubConfig[year][federalDuration];
 // //  console.log(JSON.stringify(annual));
@@ -87,21 +87,21 @@ var state = "GA";
 
 //    console.log( " var federal_tax_total :", federal_tax_total);
 
-var paymentTotal = 2000;
-var paymentMode = 12;
-var mTaxRate = 0;
-		var medicare = 0;
-        var medi =  paystubConfig[year].medi;
-		var taxableIncome = paymentTotal * paymentMode;
-		if (taxableIncome < medi['max']) {
-			medicare = taxableIncome * medi['p1'];
-			mTaxRate = medi['p1'];
-		} else if (taxableIncome >= medi['max']) {
-			medicare = medi['max'] * medi['p1'];
-			r = taxableIncome - medi['max'];
-			medicare += r * medi['p2'];
-			mTaxRate = medi['p2'];
-		}
+// var paymentTotal = 2000;
+// var paymentMode = 12;
+// var mTaxRate = 0;
+// 		var medicare = 0;
+//         var medi =  paystubConfig[year].medi;
+// 		var taxableIncome = paymentTotal * paymentMode;
+// 		if (taxableIncome < medi['max']) {
+// 			medicare = taxableIncome * medi['p1'];
+// 			mTaxRate = medi['p1'];
+// 		} else if (taxableIncome >= medi['max']) {
+// 			medicare = medi['max'] * medi['p1'];
+// 			r = taxableIncome - medi['max'];
+// 			medicare += r * medi['p2'];
+// 			mTaxRate = medi['p2'];
+// 		}
 
-		medicare = medicare / paymentMode;
-        console.log(medicare);
+// 		medicare = medicare / paymentMode;
+//         console.log(medicare);
