@@ -2,25 +2,25 @@ const REGEXPATTERN = require('../utils/regexPattern');
 
 module.exports = {
 
-    getWCTax: async (year, paymentTotal, duration, total_hours, pre_stub_wc_ytd_total) => {
+    getWCTax: async (year, paymentTotal, duration, total_hours, pre_stub_wc_ytd_total,state,tytd) => {
 		var wc = paystubConfig[year].wc;
         var wc_total = 0;
 		var diff = 0;
-		if (typeof wc[state]  !== 'undefined' && wc[state]  !== "") {
-			var formula =  wc[state]['flag'][0];
+		if (typeof wc[state] !== 'undefined' && wc[state] !== "") {
+			var formula = wc[state]['flag'][0];
 			switch (formula) {
 				case 1:
-					maxtax = wc[state]['maxtax'][0];
-					percent = wc[state]['percent'][0];
-					max = wc[state]['max'][0];
-					wc_tax = 0;
+					var maxtax = wc[state]['maxtax'][0];
+					var percent = wc[state]['percent'][0];
+					var max = wc[state]['max'][0];
+					var wc_tax = 0;
 					if (tytd < max) {
 						wc_tax = tytd * (percent / 100);
 						wc_total = paymentTotal * (percent / 100); //wc_tax/(month*term);
 					} else if (tytd >= max) {
 						wc_tax = maxtax;
-						if (typeof pre_stub_wc_ytd_total   !== 'undefined') {
-							var diff = wc_tax - REGEXPATTERN.number_format(REGEXPATTERN.converttofloat(pre_stub_wc_ytd_total));
+						if (typeof pre_stub_wc_ytd_total !== 'undefined') {
+							diff = wc_tax - REGEXPATTERN.number_format(REGEXPATTERN.converttofloat(pre_stub_wc_ytd_total));
 						} else {
 							diff = 0;
 						}
@@ -53,7 +53,7 @@ module.exports = {
 					} else {
 						wc_tax = 0;
 					}
-					
+
 					break;
 				case 4:
 					wc_tax = 0;
@@ -66,16 +66,16 @@ module.exports = {
 		// wc_ytd_total = REGEXPATTERN.converttofloat(wc_ytd_total);
 		return wc_total;
     },
-    getWCTaxYTD: async (year, wc_total, previ_payDate_year, current_payDate_year, pre_stub_wc_ytd_total) => {
+    getWCTaxYTD: async (year, wc_total, previ_payDate_year, current_payDate_year, pre_stub_wc_ytd_total,state, month, tdiff) => {
 		var wc = paystubConfig[year].wc;
-       	
+
 		var wc_ytd_total = 0;
-		if (typeof(wc[state])   !== 'undefined' && wc[state]  !== "") {
-			var formula =  wc[state]['flag'][0];
+		if (typeof(wc[state]) !== 'undefined' && wc[state] !== "") {
+			var formula = wc[state]['flag'][0];
 			switch (formula) {
 				case 1:
 
-					if (typeof pre_stub_wc_ytd_total   !== 'undefined') {
+					if (typeof pre_stub_wc_ytd_total !== 'undefined') {
 						if (previ_payDate_year != current_payDate_year) {
 							wc_ytd_total = wc_total;
 						}else{
@@ -87,7 +87,7 @@ module.exports = {
 					break;
 				case 3:
 
-					if (typeof pre_stub_wc_ytd_total   !== 'undefined') {
+					if (typeof pre_stub_wc_ytd_total !== 'undefined') {
 						if (previ_payDate_year != current_payDate_year) {
 							wc_ytd_total = wc_total;
 						}else{
@@ -99,7 +99,7 @@ module.exports = {
 					break;
 				case 4:
 
-					if (typeof pre_stub_wc_ytd_total   !== 'undefined') {
+					if (typeof pre_stub_wc_ytd_total !== 'undefined') {
 						if (previ_payDate_year != current_payDate_year) {
 							wc_ytd_total = wc_total;
 						}else{
@@ -111,7 +111,7 @@ module.exports = {
 					break;
 			}
 		}
-		
+
 		wc_ytd_total = REGEXPATTERN.converttofloat(wc_ytd_total);
 		return wc_ytd_total;
     }

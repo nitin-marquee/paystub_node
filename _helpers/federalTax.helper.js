@@ -1,8 +1,8 @@
-const REGEXPATTERN = require('../utils/regexPattern');
+// const REGEXPATTERN = require('../utils/regexPattern');
 
 module.exports = {
 
-    getFederalTax: async (year, maritalStatus, paymentTotal, paymentMode, exemp = null) => {
+    getFederalTax: async (year, maritalStatus, paymentTotal, paymentMode, exemp = null, output) => {
         if (exemp == null) {
             exemp = 0;
         }
@@ -12,13 +12,13 @@ module.exports = {
         var brackets = federal_tax[maritalStatus]['brackets'];
         var rates = federal_tax[maritalStatus]['rates'];
         var income = paymentTotal * paymentMode - deduction;
-        var income = income > 0 ? income : 0;
+        income = income > 0 ? income : 0;
         var tax = 0;
 
         if (exemp > 0)
             income = income - (exp['annual']['rate'] * exemp);
 
-        for (i = 0; i < brackets.length; i++) {
+        for (let i = 0; i < brackets.length; i++) {
             if (income >= brackets[i]) {
                 var nextBracket = brackets[i + 1] ? Math.min(brackets[i + 1], income) : income;
                 tax += (nextBracket - brackets[i]) * rates[i] / 100;
@@ -26,6 +26,7 @@ module.exports = {
                 break;
             }
         }
+        output['testing'] = "Testing";
         tax = paymentMode ? tax / paymentMode : tax;
         // console.log ("Tax: ",Math.round(tax* 100) / 100);
         if (tax > 0)
@@ -39,7 +40,7 @@ module.exports = {
         if (exemp == null) {
             exemp = 0;
         }
-        
+
         var annual = paystubConfig[year].annual;
 
         var exp = paystubConfig[year].exp;
@@ -48,7 +49,7 @@ module.exports = {
         var federalDuration = "annual";
 
         if (exemp > 0) {
-            taxableAmount = (paymentTotal * paymentMode) - (exp[year][federalDuration][year]['rate'] * exemp);
+            var taxableAmount = (paymentTotal * paymentMode) - (exp[year][federalDuration][year]['rate'] * exemp);
         } else {
             taxableAmount = paymentTotal * paymentMode;
         }
@@ -85,19 +86,19 @@ module.exports = {
         var totalTaxAmount = federalTaxSub + (taxableAmount - federalTaxExceed) * federalTax;
         console.log(totalTaxAmount);
 
-        if (totalTaxAmount == 0 || paymentMode == 0) 
+        if (totalTaxAmount == 0 || paymentMode == 0)
         {
-            var federal_tax_total = 0;
+           federal_tax_total = 0;
         }
-        else 
+        else
         {
-            var federal_tax_total = totalTaxAmount / paymentMode;
+            federal_tax_total = totalTaxAmount / paymentMode;
         }
 
         return federal_tax_total;
 
     },
-    getFederalTaxYTD: async (federalTax, pre_stub_federal_tax_ytd_total, previ_payDate_year, current_payDate_year,  month, term) => {
+    getFederalTaxYTD: async (federalTax, pre_stub_federal_tax_ytd_total, previ_payDate_year, current_payDate_year, month, term, exemp) => {
         var federal_tax_ytd_total = 0;
         if (federalTax == 0 && exemp != 0) {
             federalTax = Math.round(0 * 100) / 100;

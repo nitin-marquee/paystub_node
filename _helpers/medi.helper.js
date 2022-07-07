@@ -18,7 +18,7 @@ module.exports = {
 		}
 
 		medicare = medicare / paymentMode;
-        if (tax > 0)
+        if (medicare > 0)
             return  Math.round(medicare * 100) / 100;
         else
             return Math.round(0 * 100) / 100;

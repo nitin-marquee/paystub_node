@@ -1,5 +1,14 @@
 #!/usr/bin/env node
 
+const config = require("../env.json");
+const ENVKEY = process.env.NODE_ENV || "development";
+const ENVCONFIG = config[ENVKEY];
+
+// env. config to process.env
+Object.keys(ENVCONFIG).forEach(key => {
+  process.env[key] = ENVCONFIG[key];
+});
+
 /**
  * Module dependencies.
  */

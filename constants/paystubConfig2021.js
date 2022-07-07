@@ -1,5 +1,5 @@
 
-annual = {
+var annual = {
   "single": [{
     "min": 0,
     "max": 10275,
@@ -100,7 +100,7 @@ annual = {
   }]
 };
 
-state_tax = {
+var state_tax = {
   "AL": {
     "single": {
       "deductions": 2500,
@@ -1741,7 +1741,7 @@ state_tax = {
   }
 };
 
-sdi = {
+var sdi = {
   "CA": {
     "max": [
       128298
@@ -1814,7 +1814,7 @@ sdi = {
   }
 };
 
-federal_tax = {
+var federal_tax = {
   "single": {
     "deduction": 12950,
     "brackets": [
@@ -1859,7 +1859,7 @@ federal_tax = {
   }
 };
 
-sui = {
+var sui = {
   "AK": {
     "max": [
       39800
@@ -1898,7 +1898,7 @@ sui = {
   }
 };
 
-wc = {
+var wc = {
   "NM": {
     "daily": [
       0.0214
@@ -1941,7 +1941,7 @@ wc = {
   }
 };
 
-flv = {
+var flv = {
   "CO": {
     "percent": [
       0.5
@@ -1974,7 +1974,7 @@ flv = {
   }
 };
 
-wf = {
+var wf = {
   "NJ": {
     "max": [
       33500
@@ -1991,7 +1991,7 @@ wf = {
   }
 };
 
-exp = {
+var exp = {
   "weekly": {
     "rate": 77.9
   },
@@ -2020,13 +2020,13 @@ exp = {
     "rate": 15.6
   }
 };
-medi = {
+var medi = {
   "max": 200000,
   "p1": 0.0145,
   "p2": 0.0235
 };
 
-social = {
+var social = {
   "max": 9114,
   "p1": 0.062
 };

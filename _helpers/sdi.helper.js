@@ -2,25 +2,25 @@ const REGEXPATTERN = require('../utils/regexPattern');
 
 module.exports = {
 
-    getSdiTax: async (year, pre_stub_sdi_ytd_total, tytd, state, paymentTotal) => {
+    getSdiTax: async (year, pre_stub_sdi_ytd_total, tytd, state, paymentTotal, duration) => {
         var sdi = paystubConfig[year].sdi;
-        sdi_total = 0;
+        var sdi_total = 0;
 		// sdi_ytd_total = 0;
-		if (typeof sdi[state] !=='undefined' &&  sdi[state] === "") {
-			var formula =  sdi[state]['flag'][0];
+		if (typeof sdi[state] !=='undefined' && sdi[state] === "") {
+			var formula = sdi[state]['flag'][0];
 			switch (formula) {
 				case 1:
-					maxtax = sdi[state]['maxtax'][0];
-					percent = sdi[state]['percent'][0];
-					max = sdi[state]['max'][0];
-					sdi_tax = 0;
+					var maxtax = sdi[state]['maxtax'][0];
+					var percent = sdi[state]['percent'][0];
+					var max = sdi[state]['max'][0];
+					var sdi_tax = 0;
 					if (tytd < max) {
 						sdi_tax = tytd * (percent / 100);
 						sdi_total = REGEXPATTERN.number_format(paymentTotal * (percent / 100)); //sdi_tax/(month*term);
 					} else if (tytd >= max) {
 						sdi_tax = maxtax;
 						if (typeof pre_stub_sdi_ytd_total !=='undefined') {
-							diff = sdi_tax - REGEXPATTERN.number_format(REGEXPATTERN.converttofloat(pre_stub_sdi_ytd_total));
+							var diff = sdi_tax - REGEXPATTERN.number_format(REGEXPATTERN.converttofloat(pre_stub_sdi_ytd_total));
 						} else {
 							diff = 0;
 						}
@@ -31,19 +31,19 @@ module.exports = {
 						}
 					}
 
-					if (typeof pre_stub_sdi_ytd_total !=='undefined') {
-						if (previ_payDate_year != current_payDate_year) {
-							sdi_ytd_total = sdi_total;
-						}else{
-							if(pre_stub_sdi_ytd_total >=maxtax){
-								sdi_ytd_total=maxtax;
-							}else{
-								sdi_ytd_total = sdi_total + REGEXPATTERN.converttofloat(pre_stub_sdi_ytd_total);
-							}
-						}
-					} else {
-						sdi_ytd_total = REGEXPATTERN.number_format(sdi_tax );
-					}
+					// if (typeof pre_stub_sdi_ytd_total !=='undefined') {
+					// 	if (previ_payDate_year != current_payDate_year) {
+					// 		sdi_ytd_total = sdi_total;
+					// 	}else{
+					// 		if(pre_stub_sdi_ytd_total >=maxtax){
+					// 			sdi_ytd_total=maxtax;
+					// 		}else{
+					// 			sdi_ytd_total = sdi_total + REGEXPATTERN.converttofloat(pre_stub_sdi_ytd_total);
+					// 		}
+					// 	}
+					// } else {
+					// 	sdi_ytd_total = REGEXPATTERN.number_format(sdi_tax );
+					// }
 					break;
 				case 2:
 					percent = sdi[state]['percent'][0];
@@ -106,34 +106,35 @@ module.exports = {
 							sdi_total = sdi_tax;
 						}
 					}
-					if (typeof pre_stub_sdi_ytd_total !=='undefined') {
-						if (previ_payDate_year != current_payDate_year) {
-							sdi_ytd_total = sdi_total;
-						}else{
-							sdi_ytd_total = sdi_total + REGEXPATTERN.converttofloat(pre_stub_sdi_ytd_total);
-						}
-					} else {
-						sdi_ytd_total = REGEXPATTERN.number_format(sdi_tax * month * tdiff);
-					}
+					// if (typeof pre_stub_sdi_ytd_total !=='undefined') {
+					// 	if (previ_payDate_year != current_payDate_year) {
+					// 		sdi_ytd_total = sdi_total;
+					// 	}else{
+					// 		sdi_ytd_total = sdi_total + REGEXPATTERN.converttofloat(pre_stub_sdi_ytd_total);
+					// 	}
+					// } else {
+					// 	sdi_ytd_total = REGEXPATTERN.number_format(sdi_tax * month * tdiff);
+					// }
 					break;
 			}
 		}
+
 		sdi_total = REGEXPATTERN.converttofloat(sdi_total);
-		// sdi_ytd_total = REGEXPATTERN.converttofloat(sdi_ytd_total);
+		return sdi_total;
 
     },
-    getSdiTaxYTD: async (year, sdi_total, pre_stub_sdi_ytd_total, tytd, paymentTotal, month , tdiff, previ_payDate_year , current_payDate_year) => {
+    getSdiTaxYTD: async (year, sdi_total, pre_stub_sdi_ytd_total, tytd, paymentTotal, month , tdiff, previ_payDate_year , current_payDate_year, state, duration) => {
         var sdi = paystubConfig[year].sdi;
         // sdi_total = 0;
-		sdi_ytd_total = 0;
-		if (typeof sdi[state] !=='undefined' &&  sdi[state] === "") {
-			var formula =  sdi[state]['flag'][0];
+		var sdi_ytd_total = 0;
+		if (typeof sdi[state] !=='undefined' && sdi[state] === "") {
+			var formula = sdi[state]['flag'][0];
 			switch (formula) {
 				case 1:
-					maxtax = sdi[state]['maxtax'][0];
-					percent = sdi[state]['percent'][0];
-					max = sdi[state]['max'][0];
-					sdi_tax = 0;
+					var maxtax = sdi[state]['maxtax'][0];
+					var percent = sdi[state]['percent'][0];
+					// var max = sdi[state]['max'][0];
+					var sdi_tax = 0;
 
 					if (typeof pre_stub_sdi_ytd_total !=='undefined') {
 						if (previ_payDate_year != current_payDate_year) {
@@ -222,7 +223,7 @@ module.exports = {
 					break;
 			}
 		}
-		// sdi_total = REGEXPATTERN.converttofloat(sdi_total);
 		sdi_ytd_total = REGEXPATTERN.converttofloat(sdi_ytd_total);
+		return sdi_ytd_total;
 	}
 };

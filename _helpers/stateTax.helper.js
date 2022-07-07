@@ -4,18 +4,15 @@ module.exports = {
 
     getStateTax: async (year, maritalStatus, paymentTotal, paymentMode, state) => {
 
-        var paymentTotal = 2000;
-        var paymentMode = 12;
-
         var stateTax = 0;
-        var annualDuration = 'annual';
+        // var annualDuration = 'annual';
         var taxableIncome = paymentTotal * paymentMode;
         var tax = paystubConfig[year].state_tax;
         var stateTaxRules = tax[state][maritalStatus];
-        console.log("stateTaxRules: ", stateTaxRules)
+        // console.log("stateTaxRules: ", stateTaxRules)
         var stateTaxBrackets = stateTaxRules['brackets'];
-        console.log("stateTaxBrackets: ", stateTaxBrackets)
-        console.log("stateTaxBracketsCount: ", stateTaxBrackets.length)
+        // console.log("stateTaxBrackets: ", stateTaxBrackets)
+        // console.log("stateTaxBracketsCount: ", stateTaxBrackets.length)
         var stateTaxRates = stateTaxRules['rates'];
         var stateTaxdeDuctions = stateTaxRules['deductions'];
 
@@ -29,13 +26,13 @@ module.exports = {
         }
 
 
-        processedIncome = 0;
-        stateTaxBracketsCount = stateTaxBrackets.length;
-        console.log("stateTaxBracketsCount: ", stateTaxBracketsCount)
-        for (i = 0; i < stateTaxBracketsCount; i++) {
+        var processedIncome = 0;
+        var stateTaxBracketsCount = stateTaxBrackets.length;
+        // console.log("stateTaxBracketsCount: ", stateTaxBracketsCount)
+        for (let i = 0; i < stateTaxBracketsCount; i++) {
             if (taxableIncome >= stateTaxBrackets[i]) {
 
-                chunk = 0;
+                let chunk = 0;
                 if (typeof stateTaxBrackets[i + 1] !== 'undefined' && stateTaxBrackets[i + 1] !== 0) {
                     if (stateTaxBrackets[i + 1] < taxableIncome) {
                         chunk = stateTaxBrackets[i + 1] - processedIncome;
@@ -61,16 +58,16 @@ module.exports = {
         return state_tax_total;
 
     },
-    getStateTaxYTD: async (state_tax_total, pre_stub_state_tax_ytd_total, previ_payDate_year, current_payDate_year,  month, tdiff)=> {
-
+    getStateTaxYTD: async (state_tax_total, pre_stub_state_tax_ytd_total, previ_payDate_year, current_payDate_year, month, tdiff)=> {
+        var state_tax_ytd_total = 0;
         if (typeof pre_stub_state_tax_ytd_total !== 'undefined') {
             if (previ_payDate_year != current_payDate_year) {
-                var state_tax_ytd_total = Math.round(state_tax_total * 100) / 100;
+                state_tax_ytd_total = Math.round(state_tax_total * 100) / 100;
             } else {
-               var state_tax_ytd_total = Math.round((tate_tax_total + pre_stub_state_tax_ytd_total)*100)/100;
+               state_tax_ytd_total = Math.round((state_tax_total + pre_stub_state_tax_ytd_total)*100)/100;
             }
         } else {
-            var state_tax_ytd_total =  Math.round(state_tax_total * month * tdiff*100)/100;
+            state_tax_ytd_total = Math.round(state_tax_total * month * tdiff*100)/100;
         }
 
         return state_tax_ytd_total;

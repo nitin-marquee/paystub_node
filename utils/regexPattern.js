@@ -1,14 +1,14 @@
 module.exports = {
 
-  number_format: async (number) => {
+  number_format: (number) => {
     return parseFloat(number.toFixed(2));
   },
-  converttofloat: async (number) => {
-		var number = parseFloat(number.replace(/[^\d\.]/, ""));
+  converttofloat:  (num) => {
+		let number = parseFloat(num.toString().replace(/[^\d\\.]/, ''));
 		return number;
 	},
-  convertToFloatWithDecimal: async (number) => {
-    var number = Math.round( parseFloat(number.replace(/[^\d\.]/, '')) * 100) / 100;
+  convertToFloatWithDecimal:  (num) => {
+    let number = Math.round( parseFloat(num.replace(/[^\d\\.]/, '')) * 100) / 100;
     return number;
   }
 
