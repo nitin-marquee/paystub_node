@@ -1,8 +1,8 @@
-const REGEXPATTERN = require('../utils/regexPattern');
+// const REGEXPATTERN = require('../utils/regexPattern');
 
-module.exports = {
+// module.exports = {
 
-    getFederalTax: async (year, maritalStatus, paymentTotal, paymentMode, exemp = null) => {
+//     getFederalTax: async (year, maritalStatus, paymentTotal, paymentMode, exemp = null) => {
 
-    }
-};
+//     }
+// };

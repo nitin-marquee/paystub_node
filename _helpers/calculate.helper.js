@@ -332,22 +332,6 @@ module.exports = {
 		output['fica_medicare_total'] = fica_medicare_total;
 		output['fica_medicare_ytd_total'] = fica_medicare_ytd_total;
 
-
-		//fica_medicare_total = REGEXPATTERN.number_format(round(fica_medicare_total * 100) / 100);
-		// if (pre_stub.fica_medicare_ytd_total) {
-		// 	if (previ_payDate_year != current_payDate_year) {
-		// 		fica_medicare_ytd_total = fica_medicare_total;
-		// 	}else{
-		// 		if(mTaxRate !=0){
-		// 			var fica_medicare_ytd_total =Math.round((fica_medicare_total + pre_stub.fica_medicare_ytd_total)*100)/100;
-		// 		}else{
-		// 			var fica_medicare_ytd_total = fica_medicare_total;
-		// 		}
-		// 	}
-		// } else {
-		// 	fica_medicare_ytd_total = Math.round(fica_medicare_total* month * tdiff*100)/100;
-		// }
-
 		////////////////////MEDICARE/////////////////////////////////////
 		/////////////////////////////////////////////////////////////////
 
@@ -413,7 +397,7 @@ module.exports = {
 		////////////////////WC SECURITY/////////////////////////////////
 
 		var wc_total = await WCTAXHELPER.getWCTax(year, paymentTotal, duration, total_hours, pre_stub.wc_ytd_total,state,output['tytd']) ;
-		var wc_ytd_total = await WCTAXHELPER.getWCTaxYTD(year, wc_total, previ_payDate_year, current_payDate_year, pre_stub.wc_ytd_total,state, month, tdiff) ;
+		var wc_ytd_total = await WCTAXHELPER.getWCTaxYTD(year, wc_total, previ_payDate_year, current_payDate_year, pre_stub.wc_ytd_total,state, month, tdiff, paymentTotal, duration, total_hours, output['tytd']) ;
 		console.log("wc_total: ", wc_total);
 		console.log("wc_ytd_total: ", wc_ytd_total);
 		output['wc_total'] = wc_total;

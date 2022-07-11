@@ -1,725 +1,4 @@
-
-daily = {
-    "single": [{
-      "min": 0,
-      "max": 10.41,
-      "sub": 0,
-      "percent": 0,
-      "exceed": 10.41
-    },
-    {
-      "min": 10.41,
-      "max": 37.47,
-      "sub": 0,
-      "percent": 10,
-      "exceed": 10.41
-    },
-    {
-      "min": 37.47,
-      "max": 120.34,
-      "sub": 2.71,
-      "percent": 12,
-      "exceed": 37.47
-    },
-    {
-      "min": 120.34,
-      "max": 244.73,
-      "sub": 12.65,
-      "percent": 22,
-      "exceed": 120.34
-    },
-    {
-      "min": 244.73,
-      "max": 457.81,
-      "sub": 40,
-      "percent": 24,
-      "exceed": 244.73
-    },
-    {
-      "min": 457.81,
-      "max": 578.49,
-      "sub": 91.15,
-      "percent": 32,
-      "exceed": 457.81
-    },
-    {
-      "min": 578.49,
-      "max": 1430.68,
-      "sub": 129.77,
-      "percent": 35,
-      "exceed": 578.49
-    },
-    {
-      "min": 1430.68,
-      "max": '',
-      "sub": 428,
-      "percent": 37,
-      "exceed": 1430.68
-    }],
-    "married": [{
-      "min": 0,
-      "max": 32.60,
-      "sub": 0,
-      "percent": 0,
-      "exceed": 0
-    },
-    {
-      "min": 32.60,
-      "max": 86.71,
-      "sub": 0,
-      "percent": 10,
-      "exceed": 32.60
-    },
-    {
-      "min": 86.71,
-      "max": 252.47,
-      "sub": 5.41,
-      "percent": 12,
-      "exceed": 86.71
-    },
-    {
-      "min": 252.47,
-      "max": 501.23,
-      "sub": 25.30,
-      "percent": 22,
-      "exceed": 252.47
-    },
-    {
-      "min": 501.23,
-      "max": 927.40,
-      "sub": 80,
-      "percent": 24,
-      "exceed": 501.23
-    },
-    {
-      "min": 927.40,
-      "max": 1168.77,
-      "sub": 182.31,
-      "percent": 32,
-      "exceed": 927.40
-    },
-    {
-      "min": 1168.77,
-      "max": 1736.85,
-      "sub": 259.55,
-      "percent": 35,
-      "exceed": 1168.77
-    },
-    {
-      "min": 1736.85,
-      "max": '',
-      "sub": 458.38,
-      "percent": 37,
-      "exceed": 1738.85
-    }]
-};
-  
-weekly = {
-  "single": [{
-    "min": 44,
-    "max": 224,
-    "sub": 0,
-    "percent": 10,
-    "exceed": 44
-  },
-  {
-    "min": 224,
-    "max": 7744,
-    "sub": 18,
-    "percent": 15,
-    "exceed": 224
-  },
-  {
-    "min": 774,
-    "max": 1812,
-    "sub": 100.50,
-    "percent": 25,
-    "exceed": 774
-  },
-  {
-    "min": 1812,
-    "max": 3730,
-    "sub": 360.00,
-    "percent": 28,
-    "exceed": 1812
-  },
-  {
-    "min": 3730,
-    "max": 8058,
-    "sub": 890.02,
-    "percent": 33,
-    "exceed": 3730
-  },
-  {
-    "min": 8058,
-    "max": 8090,
-    "sub": 2325.28,
-    "percent": 35,
-    "exceed": 8058
-  },
-  {
-    "min": 8090,
-    "max": '',
-    "sub": 2336.48,
-    "percent": 39.6,
-    "exceed": 8090
-  }],
-  "married": [{
-    "min": 166,
-    "max": 525,
-    "sub": 0,
-    "percent": 10,
-    "exceed": 166
-  },
-  {
-    "min": 525,
-    "max": 1626,
-    "sub": 35.90,
-    "percent": 15,
-    "exceed": 525
-  },
-  {
-    "min": 1626,
-    "max": 3111,
-    "sub": 201.05,
-    "percent": 25,
-    "exceed": 1626
-  },
-  {
-    "min": 3111,
-    "max": 4654,
-    "sub": 572.30,
-    "percent": 28,
-    "exceed": 3111
-  },
-  {
-    "min": 4654,
-    "max": 8180,
-    "sub": 1004.34,
-    "percent": 33,
-    "exceed": 4654
-  },
-  {
-    "min": 8180,
-    "max": 9218,
-    "sub": 2167.92,
-    "percent": 35,
-    "exceed": 8180
-  },
-  {
-    "min": 9218,
-    "max": '',
-    "sub": 2531.22,
-    "percent": 39.6,
-    "exceed": 9218
-  }]
-};
-
-biweekly = {
-  "single": [{
-    "min" : 88,
-		"max" : 447,
-		"sub" : 0,
-		"percent" : 10,
-		"exceed" : 88
-  },
-  {
-    "min" : 447,
-		"max" : 1548,
-		"sub" : 35.90,
-		"percent" : 15,
-		"exceed" : 447
-  },
-  {
-    "min" : 1548,
-		"max" : 3623,
-		"sub" : 201.05,
-		"percent" : 25,
-		"exceed" : 1548
-  },
-  {
-    "min" : 3623,
-		"max" : 7460,
-		"sub" : 719.80,
-		"percent" : 28,
-		"exceed" : 3623
-  },
-  {
-    "min" : 7460,
-		"max" : 16115,
-		"sub" : 1779.89,
-		"percent" : 33,
-		"exceed" : 7460
-  },
-  {
-    "min" : 16115,
-		"max" : 16181,
-		"sub" : 4650.31,
-		"percent" : 35,
-		"exceed" : 16115
-  },
-  {
-    "min" : 16181,
-		"max" : '',
-		"sub" : 4673.41,
-		"percent" : 39.6,
-		"exceed" : 16181
-  }],
-  "married": [{
-    "min" : 333,
-		"max" : 1050,
-		"sub" : 0,
-		"percent" : 10,
-		"exceed" : 333
-  },
-  {
-    "min" : 1050,
-		"max" : 3225,
-		"sub" : 71.70,
-		"percent" : 15,
-		"exceed" : 1050
-  },
-  {
-    "min" : 3225,
-		"max" : 6221,
-		"sub" : 402.00,
-		"percent" : 25,
-		"exceed" : 3225
-  },
-  {
-    "min" : 6221,
-		"max" : 9308,
-		"sub" : 1144.25,
-		"percent" : 28,
-		"exceed" : 6221
-  },
-  {
-    "min" : 9308,
-		"max" : 16360,
-		"sub" : 2008.61,
-		"percent" : 33,
-		"exceed" : 9308
-  },
-  {
-    "min" : 16360,
-		"max" : 18437,
-		"sub" : 4335.77,
-		"percent" : 35,
-		"exceed" : 16360
-  },
-  {
-    "min" : 18437,
-		"max" : '',
-		"sub" : 5062.72,
-		"percent" : 39.6,
-		"exceed" : 18437
-  }]
-};
-
-semimonthly = {
-  "single": [{
-    "min" : 94,
-		"max" : 480,
-		"sub" : 0,
-		"percent" : 10,
-		"exceed" : 94
-  },
-  {
-    "min" : 480,
-		"max" : 1663,
-		"sub" : 38.60,
-		"percent" : 15,
-		"exceed" : 480
-  },
-  {
-    "min" : 1663,
-		"max" : 3892,
-		"sub" : 216.05,
-		"percent" : 25,
-		"exceed" : 1663
-  },
-  {
-    "min" : 3892,
-		"max" : 8017,
-		"sub" : 773.30,
-		"percent" : 28,
-		"exceed" : 3892
-  },
-  {
-    "min" : 8017,
-		"max" : 17317,
-		"sub" : 1928.30,
-		"percent" : 33,
-		"exceed" : 8017
-  },
-  {
-    "min" : 17317,
-		"max" : 17388,
-		"sub" : 4997.30,
-		"percent" : 35,
-		"exceed" : 17317
-  },
-  {
-    "min" : 17388,
-		"max" : '',
-		"sub" : 5022.15,
-		"percent" : 39.6,
-		"exceed" : 17388
-  }],
-  "married": [{
-    "min" : 356,
-		"max" : 1129,
-		"sub" : 0,
-		"percent" : 10,
-		"exceed" : 356
-  },
-  {
-    "min" : 1129,
-		"max" : 3494,
-		"sub" : 77.30,
-		"percent" : 15,
-		"exceed" : 1129
-  },
-  {
-    "min" : 3494,
-		"max" : 6685,
-		"sub" : 432.05,
-		"percent" : 25,
-		"exceed" : 3494
-  },
-  {
-    "min" : 6685,
-		"max" : 10000,
-		"sub" : 1229.80,
-		"percent" : 28,
-		"exceed" : 6685
-  },
-  {
-    "min" : 10000,
-		"max" : 17579,
-		"sub" : 2158.00,
-		"percent" : 33,
-		"exceed" : 10000
-  },
-  {
-    "min" : 17579,
-		"max" : 19813,
-		"sub" : 4659.07,
-		"percent" : 35,
-		"exceed" : 17579
-  },
-  {
-    "min" : 19813,
-		"max" : '',
-		"sub" : 5440.97,
-		"percent" : 39.6,
-		"exceed" : 19813
-  }]
-};
-
-monthly = {
-  "single": [{
-  "min" : 188,
-  "max" : 960,
-  "sub" : 0,
-  "percent" : 10,
-  "exceed" : 188
-  },
-  {
-  "min" : 960,
-  "max" : 3325,
-  "sub" : 77.20,
-  "percent" : 15,
-  "exceed" : 960
-  },
-  {
-  "min" : 3325,
-  "max" : 7783,
-  "sub" : 431.95,
-  "percent" : 25,
-  "exceed" : 3325
-  },
-  {
-  "min" : 7783,
-  "max" : 16033,
-  "sub" : 1546.15,
-  "percent" : 28,
-  "exceed" : 7783
-  },
-  {
-  "min" : 16033,
-  "max" : 34633,
-  "sub" : 3856.45,
-  "percent" : 33,
-  "exceed" : 16033
-  },
-  {
-  "min" : 34633,
-  "max" : 34775,
-  "sub" : 9994.45,
-  "percent" : 35,
-  "exceed" : 34633
-  },
-  {
-  "min" : 34775,
-  "max" : '',
-  "sub" : 10044.15,
-  "percent" : 39.6,
-  "exceed" : 34775
-  }],
-  "married": [{
-    "min" : 713,
-		"max" : 2258,
-		"sub" : 0,
-		"percent" : 10,
-		"exceed" : 713
-  },
-  {
-    "min" : 2258,
-		"max" : 8988,
-		"sub" : 154.50,
-		"percent" : 15,
-		"exceed" : 2258
-  },
-  {
-    "min" : 8988,
-		"max" : 13371,
-		"sub" : 884,
-		"percent" : 25,
-		"exceed" : 8988
-  },
-  {
-    "min" : 13371,
-		"max" : 20000,
-		"sub" : 2459.75,
-		"percent" : 28,
-		"exceed" : 13371
-  },
-  {
-    "min" : 20000,
-		"max" : 35158,
-		"sub" : 4315.87,
-		"percent" : 33,
-		"exceed" : 20000
-  },
-  {
-    "min" : 35158,
-		"max" : 39625,
-		"sub" : 9318.01,
-		"percent" : 35,
-		"exceed" : 35158
-  },
-  {
-    "min" : 39625,
-		"max" : '',
-		"sub" : 10881.46,
-		"percent" : 39.6,
-		"exceed" : 39625
-  }]
-};
-
-quarterly = {
-  "single": [{
-    "min" : 563,
-		"max" : 2881,
-		"sub" : 0,
-		"percent" : 10,
-		"exceed" : 563
-  },
-  {
-    "min" : 2881,
-		"max" : 9975,
-		"sub" : 231.80,
-		"percent" : 15,
-		"exceed" : 2881
-  },
-  {
-    "min" : 9975,
-		"max" : 23350,
-		"sub" : 1295.90,
-		"percent" : 25,
-		"exceed" : 9975
-  },
-  {
-    "min" : 23350,
-		"max" : 48100,
-		"sub" : 4639.85,
-		"percent" : 28,
-		"exceed" : 23350
-  },
-  {
-    "min" : 48100,
-		"max" : 103800,
-		"sub" : 11589.85,
-		"percent" : 33,
-		"exceed" : 48100
-  },
-  {
-    "min" : 103800,
-		"max" : 104325,
-		"sub" : 29983.85,
-		"percent" : 35,
-		"exceed" : 103800
-  },
-  {
-    "min" : 104325,
-		"max" : '',
-		"sub" : 30132.40,
-		"percent" : 39.6,
-		"exceed" : 104325
-  }],
-  "married": [{
-    "min" : 2138,
-		"max" : 8775,
-		"sub" : 0,
-		"percent" : 10,
-		"exceed" : 2138
-  },
-  {
-    "min" : 8775,
-		"max" : 20983,
-		"sub" : 463.70,
-		"percent" : 15,
-		"exceed" : 8775
-  },
-  {
-    "min" : 20983,
-		"max" : 40113,
-		"sub" : 2591.90,
-		"percent" : 25,
-		"exceed" : 20983
-  },
-  {
-    "min" : 40113,
-		"max" : 60000,
-		"sub" : 7379.40,
-		"percent" : 28,
-		"exceed" : 40113
-  },
-  {
-    "min" : 60000,
-		"max" : 105475,
-		"sub" : 12947.76,
-		"percent" : 33,
-		"exceed" : 60000
-  },
-  {
-    "min" : 105475,
-		"max" : 118875,
-		"sub" : 27954.51,
-		"percent" : 35,
-		"exceed" : 105475
-  },
-  {
-    "min" : 118875,
-		"max" : '',
-		"sub" : 32644.51,
-		"percent" : 39.6,
-		"exceed" : 118875
-  }]
-};
-
-semiannual = {
-  "single": [{
-    "min" : 1125,
-		"max" : 5763,
-		"sub" : 0,
-		"percent" : 10,
-		"exceed" : 1125
-  },
-  {
-    "min" : 5763,
-		"max" : 19950,
-		"sub" : 463.80,
-		"percent" : 15,
-		"exceed" : 5763
-  },
-  {
-    "min" : 19950,
-		"max" : 46700,
-		"sub" : 2591.85,
-		"percent" : 25,
-		"exceed" : 19950
-  },
-  {
-    "min" : 46700,
-		"max" : 96200,
-		"sub" : 9279.35,
-		"percent" : 28,
-		"exceed" : 46700
-  },
-  {
-    "min" : 96200,
-		"max" : 207800,
-		"sub" : 23139.35,
-		"percent" : 33,
-		"exceed" : 96200
-  },
-  {
-    "min" : 207800,
-		"max" : 208650,
-		"sub" : 59967.35,
-		"percent" : 35,
-		"exceed" : 207800
-  },
-  {
-    "min" : 208650,
-		"max" : '',
-		"sub" : 60264.85,
-		"percent" : 39.6,
-		"exceed" : 208650
-  }],
-  "married": [{
-    "min" : 4275,
-		"max" : 13550,
-		"sub" : 0,
-		"percent" : 10,
-		"exceed" : 4275
-  },
-  {
-    "min" : 13550,
-		"max" : 41925,
-		"sub" : 927.50,
-		"percent" : 15,
-		"exceed" : 13550
-  },
-  {
-    "min" : 41925,
-		"max" : 80225,
-		"sub" : 5183.75,
-		"percent" : 25,
-		"exceed" : 41925
-  },
-  {
-    "min" : 80225,
-		"max" : 120000,
-		"sub" : 14758.75,
-		"percent" : 28,
-		"exceed" : 80225
-  },
-  {
-    "min" : 120000,
-		"max" : 210950,
-		"sub" : 25895.75,
-		"percent" : 33,
-		"exceed" : 120000
-  },
-  {
-    "min" : 210950,
-		"max" : 237750,
-		"sub" : 55909.25,
-		"percent" : 35,
-		"exceed" : 210950
-  },{
-    "min" : 237750,
-		"max" : '',
-		"sub" : 65289.25,
-		"percent" : 39.6,
-		"exceed" : 237750
-  }]
-};
-
-annual = {
+var annual = {
   "single": [{
     "min" : 2250,
 		"max" : 11525,
@@ -817,10 +96,10 @@ annual = {
 		"percent" : 39.6,
 		"exceed" : 475500
   }]
-}
+};
 
 
-state_tax = {
+var state_tax = {
   "AL": {
     "single": {
       "deductions": 0,
@@ -2485,8 +1764,8 @@ state_tax = {
     }
   }
 };
-  
-sdi = {
+
+var sdi = {
   "CA": {
     "max": [
       106742
@@ -2558,8 +1837,8 @@ sdi = {
     ]
   }
 };
-  
-sui = {
+
+var sui = {
   "AK": {
     "max": [
       39700
@@ -2598,7 +1877,7 @@ sui = {
   }
 };
 
-wc = {
+var wc = {
   "NM": {
     "daily": [
       0.0214
@@ -2641,7 +1920,7 @@ wc = {
   }
 };
 
-flv = {
+var flv = {
   "NJ": {
     "max": [
       32600
@@ -2658,7 +1937,7 @@ flv = {
   }
 };
 
-wf = {
+var wf = {
   "NJ": {
     "max": [
       32600
@@ -2675,7 +1954,7 @@ wf = {
   }
 };
 
-exp = {
+var exp = {
   "weekly": {
     "rate": 77.90
   },
@@ -2705,20 +1984,20 @@ exp = {
   }
 };
 
-medi = {
+var medi = {
   "max": 200000,
   "p1": 0.0145,
   "p2": 0.0235
 };
-  
-social = {
+
+var social = {
   "max": 7347,
   "p1": 0.062
 };
 
 paystubConfig['2017'] = {
   annual: annual,
-  state_tax: state_tax, 
+  state_tax: state_tax,
   sdi: sdi,
   sui: sui,
   wc: wc,

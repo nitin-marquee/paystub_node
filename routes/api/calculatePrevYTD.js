@@ -4,9 +4,7 @@ const calculatePrevYTDAPI = require('../../controllers/api/calculate.controller'
 
 
   // ========== [API Routes] ================ //
-router.get('/calcute',calculatePrevYTDAPI.calculatePrev);
-
-
+router.post('/calcute',calculatePrevYTDAPI.calculatePrev);
 
 
 module.exports = router;

@@ -1,5 +1,3 @@
-
-
 var annual = {
   "single": [{
     "min" : 2250,

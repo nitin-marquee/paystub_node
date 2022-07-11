@@ -1,4 +1,4 @@
-const REGEXPATTERN = require('../utils/regexPattern');
+// const REGEXPATTERN = require('../utils/regexPattern');
 
 module.exports = {
 
